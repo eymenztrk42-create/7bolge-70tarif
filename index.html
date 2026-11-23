@@ -1,0 +1,2206 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anadolu Lezzet Atlası | 7 Bölge, 70 Geleneksel Türk Yemeği</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Playfair Display & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        stonewarm: {
+                            50: '#fdfcfb',
+                            100: '#f9f5ef',
+                            200: '#f1e9dc',
+                            300: '#e4d5be',
+                            800: '#2c2623',
+                            900: '#1c1816',
+                        },
+                        terracotta: {
+                            50: '#fdf4f2',
+                            100: '#fbe6e1',
+                            200: '#f7cfc5',
+                            500: '#d85a3c',
+                            600: '#bf4427',
+                            700: '#9e351d',
+                            800: '#822d1a',
+                        },
+                        saffron: {
+                            50: '#fefaf0',
+                            100: '#fcf2d6',
+                            200: '#f8e2a8',
+                            500: '#e59d24',
+                            600: '#c98014',
+                            700: '#a36110',
+                        },
+                        olive: {
+                            50: '#f4f6f1',
+                            100: '#e5eadf',
+                            200: '#ccd6c0',
+                            600: '#51633b',
+                            700: '#3f4e2e',
+                            800: '#333f26',
+                            900: '#29331f',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f9f5ef;
+            color: #2c2623;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .recipe-card {
+            transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .recipe-card:hover {
+            transform: translateY(-5px);
+        }
+        .line-through-item {
+            text-decoration: line-through;
+            opacity: 0.55;
+        }
+        @media print {
+            body * { visibility: hidden; }
+            #recipe-modal, #recipe-modal * { visibility: visible; }
+            #recipe-modal { position: absolute; left: 0; top: 0; width: 100%; background: white; }
+            .no-print { display: none !important; }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-terracotta-200 selection:text-terracotta-900">
+
+    <!-- Üst Navigasyon Barı -->
+    <header class="sticky top-0 z-40 bg-stonewarm-50/95 backdrop-blur-md border-b border-stonewarm-200 shadow-2xs no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-wrap items-center justify-between gap-3 py-3 sm:h-20">
+                <!-- Logo -->
+                <div onclick="resetAllFilters()" class="flex items-center gap-3 cursor-pointer group">
+                    <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-br from-terracotta-600 to-saffron-600 flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
+                        <i data-lucide="compass" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <span class="font-serif text-lg sm:text-2xl font-extrabold text-stonewarm-900 tracking-tight block leading-none">Anadolu Lezzet Atlası</span>
+                        <span class="text-[11px] font-semibold uppercase tracking-widest text-olive-700 mt-0.5 block">7 Coğrafi Bölge • 70 Geleneksel Tarif</span>
+                    </div>
+                </div>
+
+                <!-- Hızlı Arama Çubuğu -->
+                <div class="order-3 lg:order-2 w-full lg:w-96 xl:w-[440px] relative">
+                    <i data-lucide="search" class="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+                    <input 
+                        type="text" 
+                        id="search-input" 
+                        placeholder="Yemek, şehir, bölge veya malzeme ara (örn: Kayseri, Mantı, Patlıcan)..." 
+                        class="w-full pl-10 pr-9 py-2.5 bg-white border border-stonewarm-300 rounded-xl text-sm text-stonewarm-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-terracotta-500 focus:border-transparent transition-all"
+                    >
+                    <button id="clear-search-btn" onclick="clearSearch()" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-stone-400 hover:text-stone-700 rounded-lg">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <!-- Sağ Kontroller: Son Bakılanlar & Favoriler -->
+                <div class="order-2 lg:order-3 flex items-center gap-2">
+                    <button onclick="toggleRecentView()" id="recent-btn" class="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-stonewarm-300 bg-white hover:bg-stonewarm-100 text-stonewarm-800 text-xs sm:text-sm font-semibold transition-all" title="Son İncelenen Tarifler">
+                        <i data-lucide="history" class="w-4 h-4 text-saffron-600"></i>
+                        <span class="hidden sm:inline">Son Bakılan</span>
+                        <span id="recent-count" class="bg-saffron-100 text-saffron-800 text-xs px-1.5 py-0.5 rounded-md font-bold">0</span>
+                    </button>
+
+                    <button onclick="toggleFavoritesView()" id="fav-btn" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border border-terracotta-200 bg-terracotta-50 hover:bg-terracotta-100 text-terracotta-800 text-xs sm:text-sm font-semibold transition-all">
+                        <i data-lucide="heart" id="fav-btn-icon" class="w-4 h-4 text-terracotta-600"></i>
+                        <span class="hidden sm:inline">Favorilerim</span>
+                        <span id="fav-count" class="bg-terracotta-600 text-white text-xs px-1.5 py-0.5 rounded-md font-bold">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero & 7 Coğrafi Bölge Seçici -->
+    <section class="bg-gradient-to-b from-stonewarm-200/70 via-stonewarm-100 to-stonewarm-100 pt-6 pb-8 border-b border-stonewarm-200 no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-3xl mb-6">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-olive-100 text-olive-800 text-xs font-bold mb-3">
+                    <i data-lucide="map" class="w-3.5 h-3.5"></i> Türkiye Gastronomi Haritası
+                </div>
+                <h1 class="font-serif text-2xl sm:text-4xl font-extrabold text-stonewarm-900 leading-tight mb-2">
+                    Anadolu'nun Yedi Bölgesinden Sofranıza Uzanan Lezzet Mirası
+                </h1>
+                <p class="text-stone-600 text-sm sm:text-base">
+                    Bölge seçerek yöresel mutfak kültürlerini keşfedin, porsiyon sayısına göre otomatik hesaplanan tam ölçülü tariflerle geleneksel yemekleri hazırlayın.
+                </p>
+            </div>
+
+            <!-- İnteraktif 7 Bölge Kartları / Sekmeleri -->
+            <div id="region-selector" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2.5 mb-6">
+                <!-- JS ile doldurulacak -->
+            </div>
+
+            <!-- Seçili Bölge Kültürel Bilgi Bandı -->
+            <div id="region-banner" class="bg-white rounded-2xl border border-stonewarm-300/80 p-4 sm:p-6 shadow-xs transition-all">
+                <!-- JS ile dinamik güncellenecek -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Ana İçerik: Kategori & Zorluk Filtreleri + Tarif Kartları -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 no-print">
+        
+        <!-- Filtre Barı -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 mb-6 border-b border-stonewarm-200">
+            <!-- Kategori Sekmeleri -->
+            <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1" id="category-filters">
+                <!-- JS ile doldurulacak -->
+            </div>
+
+            <!-- Zorluk Filtresi & Sonuç Sayısı -->
+            <div class="flex flex-wrap items-center justify-between md:justify-end gap-3">
+                <div class="flex items-center gap-1.5 bg-white p-1 rounded-xl border border-stonewarm-300" id="difficulty-filters">
+                    <!-- JS ile doldurulacak -->
+                </div>
+                <span id="results-counter" class="text-xs sm:text-sm font-semibold text-stone-500 whitespace-nowrap">
+                    70 tarif listeleniyor
+                </span>
+            </div>
+        </div>
+
+        <!-- Tarif Grid -->
+        <div id="recipes-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- Kartlar JS ile oluşturulacak -->
+        </div>
+
+        <!-- Boş Sonuç Durumu -->
+        <div id="empty-state" class="hidden text-center py-16 px-4 bg-white rounded-3xl border border-stonewarm-200 shadow-2xs">
+            <div class="w-16 h-16 rounded-2xl bg-terracotta-50 text-terracotta-600 flex items-center justify-center mx-auto mb-4">
+                <i data-lucide="utensils" class="w-8 h-8"></i>
+            </div>
+            <h3 class="font-serif text-xl font-bold text-stonewarm-900 mb-2">Eşleşen Tarif Bulunamadı</h3>
+            <p class="text-stone-500 text-sm max-w-md mx-auto mb-6">
+                Seçtiğiniz bölge, kategori veya arama terimine uygun tarif bulunamadı. Tüm lezzetleri görmek için filtreleri sıfırlayabilirsiniz.
+            </p>
+            <button onclick="resetAllFilters()" class="px-6 py-2.5 rounded-xl bg-terracotta-600 hover:bg-terracotta-700 text-white font-semibold text-sm transition-colors">
+                Tüm Bölgeleri ve Tarifleri Göster
+            </button>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-stonewarm-900 text-stonewarm-200 py-10 mt-12 no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-terracotta-600 flex items-center justify-center text-white">
+                    <i data-lucide="compass" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <span class="font-serif text-lg font-bold text-white block leading-none">Anadolu Lezzet Atlası</span>
+                    <span class="text-xs text-stone-400">7 Bölge • 70 Geleneksel Türk Mutfağı Reçetesi</span>
+                </div>
+            </div>
+            <p class="text-xs text-stone-400 text-center sm:text-right">
+                Türk mutfak mirasını korumak, bölgesel çeşitliliği tanıtmak ve tam ölçülü tariflerle yaşatmak için hazırlanmıştır.
+            </p>
+        </div>
+    </footer>
+
+    <!-- GELİŞMİŞ TARİF DETAY MODALI -->
+    <div id="recipe-modal" class="fixed inset-0 z-50 hidden overflow-y-auto" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-stonewarm-900/75 backdrop-blur-xs transition-opacity no-print" onclick="closeRecipeModal()"></div>
+
+        <div class="flex min-h-full items-center justify-center p-2 sm:p-5">
+            <div class="relative w-full max-w-5xl bg-stonewarm-50 rounded-3xl shadow-2xl border border-stonewarm-200 overflow-hidden my-2">
+                
+                <!-- Modal Üst Araç Çubuğu -->
+                <div class="sticky top-0 z-30 flex flex-wrap items-center justify-between gap-2 px-4 sm:px-6 py-3.5 bg-stonewarm-50/95 backdrop-blur-md border-b border-stonewarm-200 no-print">
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <span id="m-region-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-olive-100 text-olive-800">Bölge</span>
+                        <span id="m-city-badge" class="px-3 py-1 rounded-full text-xs font-semibold bg-stonewarm-200 text-stonewarm-800 flex items-center gap-1">
+                            <i data-lucide="map-pin" class="w-3 h-3 text-terracotta-600"></i> Şehir
+                        </span>
+                        <span id="m-cat-badge" class="px-3 py-1 rounded-full text-xs font-semibold bg-saffron-100 text-saffron-800">Kategori</span>
+                    </div>
+
+                    <div class="flex items-center gap-1.5 sm:gap-2">
+                        <button onclick="copyFullRecipe()" class="p-2 sm:px-3 sm:py-2 rounded-xl border border-stonewarm-300 bg-white hover:bg-stonewarm-100 text-stonewarm-800 text-xs font-semibold flex items-center gap-1.5 transition-colors" title="Tarifi Panoya Kopyala">
+                            <i data-lucide="copy" class="w-4 h-4 text-stone-600"></i>
+                            <span class="hidden md:inline">Tarifi Kopyala</span>
+                        </button>
+                        <button onclick="window.print()" class="p-2 sm:px-3 sm:py-2 rounded-xl border border-stonewarm-300 bg-white hover:bg-stonewarm-100 text-stonewarm-800 text-xs font-semibold flex items-center gap-1.5 transition-colors" title="Tarifi Yazdır">
+                            <i data-lucide="printer" class="w-4 h-4 text-stone-600"></i>
+                            <span class="hidden md:inline">Yazdır</span>
+                        </button>
+                        <button id="m-fav-btn" onclick="toggleModalFavorite()" class="px-3 py-2 rounded-xl border border-terracotta-200 bg-white hover:bg-terracotta-50 text-terracotta-700 text-xs font-bold flex items-center gap-1.5 transition-colors">
+                            <i data-lucide="heart" id="m-fav-icon" class="w-4 h-4"></i>
+                            <span id="m-fav-text">Favorile</span>
+                        </button>
+                        <button onclick="closeRecipeModal()" class="p-2 rounded-xl bg-stonewarm-200 hover:bg-stonewarm-300 text-stonewarm-900 transition-colors" aria-label="Kapat">
+                            <i data-lucide="x" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Modal Kaydırılabilir İçerik -->
+                <div class="p-4 sm:p-8 space-y-8 max-h-[84vh] overflow-y-auto">
+                    
+                    <!-- Üst Özet Kartı: SVG Kapak + Başlık + 4 Metrik -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-white p-5 sm:p-6 rounded-3xl border border-stonewarm-200 shadow-2xs">
+                        <div id="m-cover-art" class="lg:col-span-5 h-52 sm:h-64 rounded-2xl flex items-center justify-center p-4 relative overflow-hidden">
+                            <!-- Dinamik Bölge & Kategori SVG İllüstrasyonu -->
+                        </div>
+                        <div class="lg:col-span-7 flex flex-col justify-between space-y-4">
+                            <div>
+                                <h2 id="m-title" class="font-serif text-2xl sm:text-4xl font-extrabold text-stonewarm-900 mb-2">Yemek Başlığı</h2>
+                                <p id="m-short-desc" class="text-stone-600 text-sm sm:text-base leading-relaxed">Açıklama</p>
+                            </div>
+
+                            <!-- 4 Bilgi Kutusu -->
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2">
+                                <div class="bg-stonewarm-100 p-3 rounded-2xl border border-stonewarm-200/70">
+                                    <span class="text-[11px] font-bold uppercase text-stone-400 block">Hazırlık</span>
+                                    <span id="m-prep" class="font-bold text-stonewarm-900 text-sm sm:text-base">20 dk</span>
+                                </div>
+                                <div class="bg-stonewarm-100 p-3 rounded-2xl border border-stonewarm-200/70">
+                                    <span class="text-[11px] font-bold uppercase text-stone-400 block">Pişirme</span>
+                                    <span id="m-cook" class="font-bold text-stonewarm-900 text-sm sm:text-base">30 dk</span>
+                                </div>
+                                <div class="bg-stonewarm-100 p-3 rounded-2xl border border-stonewarm-200/70">
+                                    <span class="text-[11px] font-bold uppercase text-stone-400 block">Zorluk</span>
+                                    <span id="m-diff" class="font-bold text-sm sm:text-base">Orta</span>
+                                </div>
+                                <div class="bg-stonewarm-100 p-3 rounded-2xl border border-stonewarm-200/70">
+                                    <span class="text-[11px] font-bold uppercase text-stone-400 block">Enerji / Porsiyon</span>
+                                    <span id="m-calories" class="font-bold text-olive-700 text-sm sm:text-base">420 kcal</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Kültürel Hikayesi -->
+                    <div class="bg-olive-50 border border-olive-200 rounded-2xl p-5 sm:p-6">
+                        <h3 class="font-serif text-lg sm:text-xl font-bold text-olive-900 flex items-center gap-2 mb-2.5">
+                            <i data-lucide="book-open" class="w-5 h-5 text-olive-700"></i>
+                            Yöresel Geçmişi & Gastronomi Kültürü
+                        </h3>
+                        <p id="m-history" class="text-stone-700 text-sm sm:text-base leading-relaxed"></p>
+                    </div>
+
+                    <!-- Ana Gövde: Sol (Porsiyon Hesaplayıcı + Malzemeler + Zamanlayıcı) | Sağ (Bölümlü Aşamalar + Püf Noktası) -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                        
+                        <!-- SOL KOLON -->
+                        <div class="lg:col-span-5 space-y-6">
+                            
+                            <!-- İnteraktif Porsiyon Hesaplayıcı & Malzeme Listesi -->
+                            <div class="bg-white p-5 rounded-3xl border border-stonewarm-200 shadow-2xs">
+                                <div class="flex items-center justify-between gap-2 pb-4 mb-4 border-b border-stonewarm-200">
+                                    <div>
+                                        <h3 class="font-serif text-xl font-bold text-stonewarm-900">Malzemeler</h3>
+                                        <span class="text-xs text-stone-400">Ölçüler kişiye göre otomatik hesaplanır</span>
+                                    </div>
+                                    <div class="flex items-center gap-1.5 bg-terracotta-50 px-2.5 py-1.5 rounded-xl border border-terracotta-200">
+                                        <button onclick="adjustServings(-1)" class="w-7 h-7 rounded-lg bg-white hover:bg-terracotta-600 hover:text-white text-stonewarm-900 font-bold flex items-center justify-center transition-colors shadow-2xs">-</button>
+                                        <span id="m-servings-label" class="text-xs sm:text-sm font-extrabold text-terracotta-900 min-w-[64px] text-center">4 Kişilik</span>
+                                        <button onclick="adjustServings(1)" class="w-7 h-7 rounded-lg bg-white hover:bg-terracotta-600 hover:text-white text-stonewarm-900 font-bold flex items-center justify-center transition-colors shadow-2xs">+</button>
+                                    </div>
+                                </div>
+
+                                <!-- Hızlı Porsiyon Seçim Butonları -->
+                                <div class="flex items-center gap-1.5 mb-4 no-print">
+                                    <span class="text-[11px] font-semibold text-stone-400 mr-1">Hızlı Seçim:</span>
+                                    <button onclick="setServings(2)" class="quick-srv-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-stonewarm-100 hover:bg-terracotta-100 text-stonewarm-800 transition-colors" data-srv="2">2 Kişi</button>
+                                    <button onclick="setServings(4)" class="quick-srv-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-stonewarm-100 hover:bg-terracotta-100 text-stonewarm-800 transition-colors" data-srv="4">4 Kişi</button>
+                                    <button onclick="setServings(6)" class="quick-srv-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-stonewarm-100 hover:bg-terracotta-100 text-stonewarm-800 transition-colors" data-srv="6">6 Kişi</button>
+                                    <button onclick="setServings(8)" class="quick-srv-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-stonewarm-100 hover:bg-terracotta-100 text-stonewarm-800 transition-colors" data-srv="8">8 Kişi</button>
+                                    <button onclick="setServings(12)" class="quick-srv-btn px-2.5 py-1 rounded-lg text-xs font-bold bg-stonewarm-100 hover:bg-terracotta-100 text-stonewarm-800 transition-colors" data-srv="12">12 Kişi</button>
+                                </div>
+
+                                <!-- Malzeme Listesi -->
+                                <ul id="m-ingredients-list" class="space-y-2 text-sm mb-4">
+                                    <!-- JS ile doldurulacak -->
+                                </ul>
+
+                                <!-- Eksikleri Kopyala Butonu -->
+                                <button onclick="copyShoppingList()" class="w-full py-2.5 px-4 rounded-xl bg-stonewarm-100 hover:bg-stonewarm-200 text-stonewarm-800 text-xs font-bold flex items-center justify-center gap-2 transition-colors no-print">
+                                    <i data-lucide="clipboard-list" class="w-4 h-4 text-terracotta-600"></i>
+                                    Alınacak Eksik Malzemeleri Kopyala
+                                </button>
+                            </div>
+
+                            <!-- Dahili Mutfak Zamanlayıcısı (Timer Widget) -->
+                            <div class="bg-stonewarm-900 text-white p-5 rounded-3xl shadow-md no-print">
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="text-xs font-bold uppercase tracking-wider text-saffron-400 flex items-center gap-1.5">
+                                        <i data-lucide="timer" class="w-4 h-4"></i> Mutfak Zamanlayıcısı
+                                    </span>
+                                    <button onclick="setTimerFromCookTime()" id="timer-preset-btn" class="text-[11px] bg-white/10 hover:bg-white/20 px-2.5 py-1 rounded-lg font-semibold text-stonewarm-200 transition-colors">
+                                        Pişirme Süresini Kur (30 dk)
+                                    </button>
+                                </div>
+                                <div class="flex items-center justify-between gap-4">
+                                    <div id="timer-display" class="font-mono text-3xl sm:text-4xl font-bold tracking-wider text-white">
+                                        30:00
+                                    </div>
+                                    <div class="flex items-center gap-1.5">
+                                        <button onclick="adjustTimerMinutes(-5)" class="px-2 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-xs font-bold">-5d</button>
+                                        <button onclick="adjustTimerMinutes(5)" class="px-2 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-xs font-bold">+5d</button>
+                                        <button onclick="toggleTimer()" id="timer-start-btn" class="px-3.5 py-2 rounded-xl bg-terracotta-600 hover:bg-terracotta-500 text-white text-xs font-bold transition-colors">
+                                            Başlat
+                                        </button>
+                                        <button onclick="resetTimer()" class="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-stone-300" title="Sıfırla">
+                                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SAĞ KOLON: Bölümlendirilmiş Hazırlanış Aşamaları & Püf Noktası -->
+                        <div class="lg:col-span-7 space-y-6">
+                            <div>
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="font-serif text-xl sm:text-2xl font-bold text-stonewarm-900 flex items-center gap-2">
+                                        <i data-lucide="chef-hat" class="w-6 h-6 text-terracotta-600"></i>
+                                        Adım Adım Hazırlanış Aşamaları
+                                    </h3>
+                                    <span class="text-xs text-stone-400 hidden sm:inline">Adımlara tıklayarak tamamlandı işaretleyin</span>
+                                </div>
+                                
+                                <div id="m-steps-container" class="space-y-5">
+                                    <!-- Hazırlık, Pişirme, Servis bölümleri JS ile oluşturulacak -->
+                                </div>
+                            </div>
+
+                            <!-- Ustasından Püf Noktaları -->
+                            <div class="bg-saffron-50 border border-saffron-200 rounded-2xl p-5">
+                                <h4 class="font-bold text-saffron-900 text-xs uppercase tracking-wider mb-2 flex items-center gap-2">
+                                    <i data-lucide="sparkles" class="w-4 h-4 text-saffron-600"></i>
+                                    Ustasından Püf Noktaları
+                                </h4>
+                                <p id="m-tips" class="text-stone-800 text-sm leading-relaxed"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Benzer Bölge Yemekleri Önerileri -->
+                    <div class="pt-6 border-t border-stonewarm-200 no-print">
+                        <h4 id="m-related-title" class="font-serif text-lg font-bold text-stonewarm-900 mb-4">Bu Bölgeden Diğer Lezzetler</h4>
+                        <div id="m-related-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <!-- JS ile doldurulacak -->
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bildirim Toast -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-24 opacity-0 transition-all duration-300 bg-stonewarm-900 text-white px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2.5 text-sm font-medium pointer-events-none">
+        <i data-lucide="check-circle-2" class="w-4 h-4 text-saffron-400"></i>
+        <span id="toast-msg">İşlem tamamlandı</span>
+    </div>
+
+    <script>
+        // --- 1. BÖLGE META BİLGİLERİ VE KÜLTÜREL PROFİLLER ---
+        const regionsMeta = {
+            "Tümü": {
+                name: "Tüm Türkiye",
+                shortName: "Tümü",
+                icon: "globe",
+                gradient: "from-terracotta-500 to-saffron-500",
+                cities: "81 İl • 7 Coğrafi Bölge",
+                description: "Orta Asya'dan Osmanlı saray mutfağına, Ege'nin zeytinyağlılarından Güneydoğu'nun baharatlı kebaplarına uzanan 70 geleneksel Türk mutfağı reçetesi."
+            },
+            "İç Anadolu": {
+                name: "İç Anadolu Bölgesi",
+                shortName: "İç Anadolu",
+                icon: "wheat",
+                gradient: "from-amber-500 to-terracotta-500",
+                cities: "Kayseri, Konya, Ankara, Sivas, Eskişehir, Yozgat",
+                description: "Tahıl ambarı bozkırın bereketiyle şekillenen hamur işleri, tandır ve güveç kültürünün kalbi. İncecik açılan mantılar, etli ekmekler ve ağır ateşte pişen et yemekleriyle ünlüdür."
+            },
+            "Ege": {
+                name: "Ege Bölgesi",
+                shortName: "Ege",
+                icon: "leaf",
+                gradient: "from-olive-600 to-emerald-600",
+                cities: "İzmir, Muğla, Aydın, Manisa, Denizli, Afyon",
+                description: "Zeytinyağının, yabani otların ve hafif Akdeniz esintisinin hakim olduğu sağlıklı ve zarif mutfak. Enginar, şevketi bostan, sarmalar ve deniz mahsulleri başroldedir."
+            },
+            "Karadeniz": {
+                name: "Karadeniz Bölgesi",
+                shortName: "Karadeniz",
+                icon: "waves",
+                gradient: "from-teal-600 to-cyan-700",
+                cities: "Trabzon, Rize, Samsun, Ordu, Giresun, Artvin",
+                description: "Hamsinin kırk çeşit yemeği, mısır unu, yayla tereyağı ve karalahana ile karakterize olan özgün ve doyurucu mutfak kültürü."
+            },
+            "Akdeniz": {
+                name: "Akdeniz Bölgesi",
+                shortName: "Akdeniz",
+                icon: "flame",
+                gradient: "from-orange-500 to-red-600",
+                cities: "Adana, Hatay, Mersin, Antalya, Kahramanmaraş",
+                description: "UNESCO gastronomi şehri Hatay'dan Adana'nın zırh kebabına, narenciye bahçelerinden tahinli mezelere uzanan bol baharatlı, iştah açıcı güney sofraları."
+            },
+            "Marmara": {
+                name: "Marmara Bölgesi",
+                shortName: "Marmara",
+                icon: "crown",
+                gradient: "from-purple-600 to-terracotta-600",
+                cities: "İstanbul, Bursa, Edirne, Tekirdağ, Çanakkale, Sakarya",
+                description: "Osmanlı Saray Mutfağı'nın inceliklerini Balkan ve Trakya göçmen lezzetleriyle birleştiren köklü gastronomi merkezi."
+            },
+            "Doğu Anadolu": {
+                name: "Doğu Anadolu Bölgesi",
+                shortName: "Doğu Anadolu",
+                icon: "mountain",
+                gradient: "from-slate-600 to-amber-700",
+                cities: "Erzurum, Kars, Van, Elazığ, Malatya, Ağrı",
+                description: "Yüksek yaylaların doğal hayvancılığı, tandır geleneği, yöresel peynirler, cağ kebabı ve soğuk iklimin şifalı bulgur-yoğurt çorbalarıyla öne çıkan güçlü mutfak."
+            },
+            "Güneydoğu Anadolu": {
+                name: "Güneydoğu Anadolu Bölgesi",
+                shortName: "Güneydoğu",
+                icon: "sparkles",
+                gradient: "from-red-700 to-amber-600",
+                cities: "Gaziantep, Şanlıurfa, Mardin, Diyarbakır, Adıyaman",
+                description: "Mezopotamya'nın binlerce yıllık tarım ve baharat mirası. Zırh kebapları, zahmetli içli köfteler, beyran ve dünyaca tescilli Antep baklavasının ana vatanı."
+            }
+        };
+
+        // --- 2. KATEGORİ BAZLI ÖZEL SANATSAL SVG İLLÜSTRASYONLAR ---
+        const categoryIllustrations = {
+            "Ana Yemek": `
+                <svg viewBox="0 0 220 150" class="w-full h-full drop-shadow-md">
+                    <ellipse cx="110" cy="88" rx="86" ry="48" fill="#ffffff" stroke="#e2d5c1" stroke-width="3"/>
+                    <ellipse cx="110" cy="88" rx="68" ry="36" fill="#fdf8f2" stroke="#ebd9c3" stroke-width="1.5"/>
+                    <g fill="#7c3f24" stroke="#522613" stroke-width="1.5">
+                        <rect x="74" y="72" width="26" height="18" rx="7"/>
+                        <rect x="104" y="68" width="28" height="20" rx="7"/>
+                        <rect x="134" y="74" width="22" height="17" rx="7"/>
+                        <rect x="86" y="90" width="28" height="18" rx="7"/>
+                        <rect x="118" y="89" width="26" height="17" rx="7"/>
+                    </g>
+                    <path d="M72,88 Q110,108 148,86" fill="none" stroke="#d85a3c" stroke-width="4" stroke-linecap="round"/>
+                    <path d="M68,62 Q95,52 122,58" fill="none" stroke="#51633b" stroke-width="5" stroke-linecap="round"/>
+                    <circle cx="142" cy="58" r="8" fill="#d85a3c"/>
+                </svg>`,
+            "Çorba": `
+                <svg viewBox="0 0 220 150" class="w-full h-full drop-shadow-md">
+                    <path d="M52,74 C52,124 168,124 168,74 Z" fill="#c46333" stroke="#853c19" stroke-width="2.5"/>
+                    <ellipse cx="110" cy="74" rx="58" ry="21" fill="#df8252" stroke="#853c19" stroke-width="2"/>
+                    <ellipse cx="110" cy="76" rx="51" ry="17" fill="#e59d24"/>
+                    <path d="M84,76 C98,66 122,84 136,74" fill="none" stroke="#bf4427" stroke-width="3.5" stroke-linecap="round"/>
+                    <circle cx="110" cy="74" r="3" fill="#51633b"/>
+                    <path d="M92,48 Q87,36 94,26 M110,44 Q115,32 108,22 M128,48 Q123,36 130,26" fill="none" stroke="#a8a29e" stroke-width="2.5" stroke-linecap="round" opacity="0.65"/>
+                </svg>`,
+            "Hamur İşi": `
+                <svg viewBox="0 0 220 150" class="w-full h-full drop-shadow-md">
+                    <ellipse cx="110" cy="90" rx="88" ry="48" fill="#ffffff" stroke="#d6c5ad" stroke-width="3"/>
+                    <g fill="#f1cfa0" stroke="#c29253" stroke-width="1.5">
+                        <path d="M74,80 Q86,66 98,80 Q86,94 74,80 Z"/>
+                        <path d="M100,74 Q112,60 124,74 Q112,88 100,74 Z"/>
+                        <path d="M126,80 Q138,66 150,80 Q138,94 126,80 Z"/>
+                        <path d="M86,96 Q98,82 110,96 Q98,110 86,96 Z"/>
+                        <path d="M114,96 Q126,82 138,96 Q126,110 114,96 Z"/>
+                    </g>
+                    <path d="M78,86 C98,74 124,102 144,85" fill="none" stroke="#d85a3c" stroke-width="3.5" stroke-linecap="round"/>
+                    <circle cx="102" cy="82" r="2" fill="#51633b"/>
+                    <circle cx="122" cy="90" r="2" fill="#51633b"/>
+                </svg>`,
+            "Zeytinyağlı/Meze": `
+                <svg viewBox="0 0 220 150" class="w-full h-full drop-shadow-md">
+                    <ellipse cx="110" cy="90" rx="86" ry="46" fill="#ffffff" stroke="#ccd6c0" stroke-width="3"/>
+                    <g fill="#6d8748" stroke="#45592b" stroke-width="1.5">
+                        <ellipse cx="92" cy="84" rx="22" ry="12" transform="rotate(-15 92 84)"/>
+                        <ellipse cx="128" cy="84" rx="22" ry="12" transform="rotate(15 128 84)"/>
+                        <ellipse cx="110" cy="98" rx="24" ry="12"/>
+                    </g>
+                    <circle cx="110" cy="82" r="9" fill="#facc15" stroke="#ca8a04" stroke-width="1.5"/>
+                    <circle cx="94" cy="94" r="3" fill="#d85a3c"/>
+                    <circle cx="126" cy="94" r="3" fill="#d85a3c"/>
+                </svg>`,
+            "Tatlı": `
+                <svg viewBox="0 0 220 150" class="w-full h-full drop-shadow-md">
+                    <ellipse cx="110" cy="92" rx="86" ry="46" fill="#ffffff" stroke="#e4d5be" stroke-width="3"/>
+                    <g stroke="#b87a28" stroke-width="1.5">
+                        <polygon points="110,54 148,78 110,102 72,78" fill="#e59d24"/>
+                        <polygon points="110,102 148,78 148,90 110,114" fill="#c27d19"/>
+                        <polygon points="110,102 72,78 72,90 110,114" fill="#d48c20"/>
+                    </g>
+                    <ellipse cx="110" cy="78" rx="16" ry="9" fill="#5b8231"/>
+                    <circle cx="105" cy="76" r="2" fill="#84b54a"/>
+                    <circle cx="115" cy="79" r="2.2" fill="#84b54a"/>
+                </svg>`
+        };
+
+        // --- 3. 7 BÖLGE x 10 YEMEK = 70 GELENEKSEL TÜRK YEMEĞİ VERİTABANI ---
+        // Kompakt ve zengin şema yardımcısı ile 70 tarifin her biri tam ölçülü malzemeler, 3 aşamalı yapılış, kültürel hikaye ve püf noktasıyla tanımlanmıştır.
+        const rawRecipes = [
+            // ================= 1. İÇ ANADOLU BÖLGESİ (10 YEMEK) =================
+            {
+                id: "kayseri-mantisi", title: "Kayseri Mantısı", region: "İç Anadolu", city: "Kayseri", category: "Hamur İşi",
+                prep: "45 dk", cook: "20 dk", diff: "Ustalık İster", cal: 460, srv: 4,
+                desc: "İncecik açılan hamurun içine gizlenen baharatlı kıyma, sarımsaklı yoğurt ve kızdırılmış naneli tereyağı ile bozkırın sabır şaheseri.",
+                history: "Orta Asya'dan Anadolu'ya taşınan mantı, Kayseri mutfağında bir zarafet ölçütü haline gelmiştir. Geleneksel olarak bir kaşığa 40 adet mantı sığdırılması ustalık nişanesi sayılır.",
+                ing: [[3,"su bardağı","Un"],[1,"adet","Yumurta"],[0.75,"su bardağı","Ilık su"],[250,"gram","Orta yağlı dana kıyma"],[1,"adet","Kuru soğan (rendelenmiş)"],[1,"kase","Süzme yoğurt ve 2 diş sarımsak"],[2,"yemek kaşığı","Tereyağı ve 1 yemek kaşığı salça"],[1,"tatlı kaşığı","Kuru nane ve sumak"]],
+                steps: {
+                    prep: ["Un, yumurta, tuz ve ılık suyu karıştırarak oldukça sert bir hamur yoğurun ve 20 dakika nemli bez altında dinlendirin.", "Kıymayı suyu sıkılmış rendelenmiş soğan, tuz ve karabiberle özleşene dek yoğurun.", "Hamuru incecik açıp 1.5 cm'lik kareler kesin, ortalarına kıyma koyup bohça şeklinde kapatın."],
+                    cook: ["Geniş tencerede kaynayan tuzlu suya mantıları atın ve hamurlar yumuşayana dek 12-15 dakika haşlayın.", "Küçük tavada tereyağını kızdırıp salça ve naneyi yakmadan kavurun."],
+                    serve: ["Süzülen mantıları tabağa alıp üzerine sarımsaklı yoğurt ve kızgın salçalı tereyağını gezdirin, sumak serperek sıcak servis edin."]
+                },
+                tips: "Hamurun haşlanırken dağılmaması için mutlaka sert yoğrulması ve kesilen karelerin kurumadan hızlıca kapatılması gerekir."
+            },
+            {
+                id: "konya-etli-ekmek", title: "Konya Etli Ekmek", region: "İç Anadolu", city: "Konya", category: "Hamur İşi",
+                prep: "40 dk", cook: "15 dk", diff: "Orta", cal: 540, srv: 4,
+                desc: "Çıtır incecik açılmış uzun hamur üzerinde zırh kıyması, ince kıyılmış domates, yeşil biber ve soğanla taş fırında pişen Konya klasiği.",
+                history: "Selçuklu başkentinden günümüze miras kalan etli ekmek, kıymanın sinirlerinden ayıklanıp bıçakla incecik kıyılması ve harcın pişirilmeden hamurun üzerine yayılmasıyla lahmacun ve pideden ayrılır.",
+                ing: [[4,"su bardağı","Un"],[1.5,"su bardağı","Ilık su"],[1,"paket","İnstant maya (10g)"],[400,"gram","Dana kaburga veya döş kıyma"],[3,"adet","Olgun domates (kabuksuz, ince doğranmış)"],[4,"adet","Yeşil sivri biber"],[2,"adet","Kuru soğan (çok ince kıyılmış)"],[2,"yemek kaşığı","Sıvı yağ ve tuz-karabiber"]],
+                steps: {
+                    prep: ["Un, maya, tuz ve ılık suyu yoğurup ele yapışmayan yumuşak bir hamur elde edin; 30 dakika mayalandırın.", "Sebzeleri bıçakla çok ince kıyın (rondodan geçirmeyin), kıyma ve baharatlarla sulu kıvamlı bir harç yoğurun."],
+                    cook: ["Bezeleri merdaneyle olabildiğince ince ve uzun formda açın. Üzerine harcı kenarlara kadar ince bir tabaka halinde yayın.", "Önceden ısıtılmış 250 derece fırında (varsa fırın taşında) kenarları kızarana dek 10-12 dakika pişirin."],
+                    serve: ["Fırından çıkar çıkmaz kenarlarına hafif tereyağı sürün, dilimleyip yanında ayran ve köz biberle servis edin."]
+                },
+                tips: "Etli ekmek harcında asla salça kullanılmaz; rengini ve lezzetini bol domates ve taze biberin suyundan alır."
+            },
+            {
+                id: "ankara-tava", title: "Ankara Tava", region: "İç Anadolu", city: "Ankara", category: "Ana Yemek",
+                prep: "25 dk", cook: "50 dk", diff: "Orta", cal: 610, srv: 4,
+                desc: "Kuzu incik veya kuşbaşı etin kendi suyunda lokum gibi pişip, kavrulmuş arpa şehriye pilavıyla fırında bütünleştiği başkent lezzeti.",
+                history: "Ankara'nın geleneksel bayram ve davet yemeği olan Ankara Tava, et suyunun arpa şehriye tarafından tamamen emilmesiyle ortaya çıkan yoğun aromasıyla bilinir.",
+                ing: [[600,"gram","Kemikli kuzu incik veya kuşbaşı et"],[2,"su bardağı","Arpa şehriye"],[2,"yemek kaşığı","Tereyağı"],[2,"adet","Domates ve 3 adet sivri biber"],[1,"adet","Kuru soğan ve 3 diş sarımsak"],[3.5,"su bardağı","Sıcak et suyu"],[1,"çay kaşığı","Karabiber ve kekik"]],
+                steps: {
+                    prep: ["Etleri düdüklü veya derin tencerede soğan ve sarımsakla mühürleyip üzerini geçecek suyla yumuşayana dek haşlayın, suyunu ayırın."],
+                    cook: ["Geniş bir tavada tereyağını eritip arpa şehriyeleri altın rengi alana dek kavurun. Doğranmış biber ve domatesleri ekleyip 3 dakika soteleyin.", "Karışımı fırın tepsisine yayın, üzerine haşlanmış etleri dizin ve sıcak et suyunu gezdirin.", "200 derece fırında şehriyeler suyunu çekip üzeri hafif kızarana dek 25 dakika pişirin."],
+                    serve: ["Fırından çıkınca 10 dakika dinlendirin, üzerine taze kekik serpip cacık eşliğinde servis yapın."]
+                },
+                tips: "Arpa şehriyelerin lapalaşmaması için kavurma aşamasında renginin koyu kehribar tonuna dönmesini bekleyin."
+            },
+            {
+                id: "sivas-koftesi", title: "Sivas Köftesi", region: "İç Anadolu", city: "Sivas", category: "Ana Yemek",
+                prep: "20 dk", cook: "15 dk", diff: "Kolay", cal: 490, srv: 4,
+                desc: "Ekmek içi, soğan veya baharat katılmadan yalnızca dana döş eti ve tuzun yoğrulup dinlendirilmesiyle hazırlanan saf et köftesi.",
+                history: "Sivas yaylalarında kekikle beslenen hayvanların etinden yapılan bu köfte, hiçbir katkı maddesi içermemesi sayesinde etin gerçek lezzetini korur.",
+                ing: [[600,"gram","Dana döş ve kaburga karışımı kıyma"],[1.5,"çay kaşığı","Kaya tuzu"],[4,"adet","Tırnak pide veya lavaş"],[4,"adet","Domates ve 4 adet yeşil biber (közlemek için)"]],
+                steps: {
+                    prep: ["Kıymayı kaya tuzu ile birlikte yaklaşık 10 dakika sakız gibi özleşene kadar yoğurun.", "Harcı streç filme sarıp buzdolabında en az 4 saat (tercihen 1 gece) dinlendirin.", "Dinlenen harçtan ceviz büyüklüğünde parçalar koparıp yassı oval köfteler şekillendirin."],
+                    cook: ["Döküm tavayı veya ızgarayı iyice ısıtın. Köfteleri orta-yüksek ateşte her iki yüzü 4-5 dakika olacak şekilde sulu kalacak biçimde pişirin."],
+                    serve: ["Köftelerin yağına batırılmış pidelerin üzerinde közlenmiş domates ve biberle sıcak servis edin."]
+                },
+                tips: "Sivas köftesinde kimyon, karabiber veya soğan kullanılmaz; lezzetin sırrı çift çekim yağlı dana eti ve uzun dinlendirme süresidir."
+            },
+            {
+                id: "testi-kebabi", title: "Yozgat & Kapadokya Testi Kebabı", region: "İç Anadolu", city: "Yozgat / Nevşehir", category: "Ana Yemek",
+                prep: "30 dk", cook: "90 dk", diff: "Ustalık İster", cal: 580, srv: 4,
+                desc: "Toprak testi içinde ağzı hamurla mühürlenerek kendi buharında ağır ağır pişen, servis anında kırılarak açılan görkemli kebap.",
+                history: "Avanos'un kızıl toprağından yapılan testilerde odun fırınında pişirilen bu yemek, hem sunum ritüeli hem de buharın içeride hapsolmasıyla etin dağılacak kıvama gelmesiyle ünlüdür.",
+                ing: [[700,"gram","Kuşbaşı kuzu veya dana eti"],[2,"adet","Domates (kabuksuz doğranmış)"],[3,"adet","Yeşil biber ve 10 adet arpacık soğan"],[5,"diş","Sarımsak"],[2,"yemek kaşığı","Tereyağı"],[1,"çay kaşığı","Kekik, karabiber, pul biber"],[1,"su bardağı","Un ve su (testi ağzını kapatmak için hamur)"]],
+                steps: {
+                    prep: ["Kuşbaşı etleri, arpacık soğanları, sarımsakları, doğranmış domates, biber ve baharatları geniş kapta harmanlayın.", "Karışımı toprak testinin içine doldurun, en üste tereyağı parçaları ekleyin."],
+                    cook: ["Un ve suyla hazırladığınız hamuru testinin ağzına sıkıca kapatın ve hava alması için ortasına kürdanla küçük bir delik açın.", "190 derece fırında veya köz ateşinde yaklaşık 1.5 saat pişirin."],
+                    serve: ["Testiyi sıcak halde servis tabağına alın, boğum yerinden dikkatlice kırarak pilav eşliğinde sunun."]
+                },
+                tips: "Evde toprak testi yoksa aynı malzemeleri ağzı hamurla mühürlenmiş toprak güveç çömleğinde de aynı lezzetle pişirebilirsiniz."
+            },
+            {
+                id: "arabasi-corbasi", title: "Arabaşı Çorbası ve Hamuru", region: "İç Anadolu", city: "Yozgat / Konya", category: "Çorba",
+                prep: "30 dk", cook: "45 dk", diff: "Ustalık İster", cal: 390, srv: 6,
+                desc: "Kış gecelerinin vazgeçilmezi; acılı tavuk veya hindi suyuna çorba ve çiğnenmeden yutulan özel un peltesi hamuru.",
+                history: "Anadolu'da 'ara aşı' kelimesinden türeyen bu yemek, uzun kış gecelerinde misafir ağırlama ve dayanışma kültürünün en önemli simgesidir.",
+                ing: [[1,"adet","Tavuk göğsü veya but (haşlanmış, didiklenmiş)"],[2,"yemek kaşığı","Tereyağı ve 2 yemek kaşığı un"],[1.5,"yemek kaşığı","Domates ve biber salçası karışımı"],[6,"su bardağı","Sıcak tavuk suyu"],[1,"tatlı kaşığı","Acı pul biber ve karabiber"],[2,"su bardağı","Un (hamuru için) ve 5 su bardağı su"]],
+                steps: {
+                    prep: ["Hamur için 2 su bardağı unu soğuk suyla pürüzsüz çırpıp tencerede sürekli karıştırarak koyu muhallebi kıvamında pişirin; ıslatılmış tepsiye döküp soğutun."],
+                    cook: ["Tencerede tereyağı ile unu kavurun, salçaları ve acı pul biberi ekleyip kokusu çıkana dek çevirin.", "Sıcak tavuk suyunu azar azar ekleyip çırpın, didiklenmiş tavuk etlerini ilave edip 15 dakika kaynatın."],
+                    serve: ["Soğuyan hamuru baklava dilimi kesin. Kaşığa önce hamurdan alıp sonra sıcak acılı çorbaya batırarak çiğnemeden yutun."]
+                },
+                tips: "Hamurun tepsiye yapışmaması ve kaşıktan kolay kayması için tepsiyi dökmeden önce mutlaka soğuk suyla ıslatın."
+            },
+            {
+                id: "ciborek", title: "Eskişehir Çibörek", region: "İç Anadolu", city: "Eskişehir", category: "Hamur İşi",
+                prep: "35 dk", cook: "15 dk", diff: "Orta", cal: 480, srv: 4,
+                desc: "Kırım Tatar mutfağının Eskişehir'e armağanı; sulu kıymalı harcıyla kızgın yağda saniyeler içinde kabaran çıtır börek.",
+                history: "Kırım Tatarlarının 'şırbörek' veya 'çibörek' (lezzetli börek) adını verdiği bu lezzet, 19. yüzyıl göçleriyle Eskişehir mutfağının simgesi olmuştur.",
+                ing: [[3.5,"su bardağı","Un"],[1,"su bardağı","Ilık su ve 1 yemek kaşığı üzüm sirkesi"],[300,"gram","Dana kıyma"],[1,"adet","Büyük kuru soğan (rendelenmiş)"],[0.5,"su bardağı","Su (kıyma harcını sulandırmak için)"],[1.5,"su bardağı","Ayçiçek yağı (kızartmak için)"]],
+                steps: {
+                    prep: ["Un, tuz, sirke ve suyu yoğurup orta sertlikte bir hamur hazırlayın ve 20 dakika dinlendirin.", "Kıymayı rendelenmiş soğan, tuz, karabiber ve yarım su bardağı su ile bulamaç gibi akışkan bir harç olana dek karıştırın."],
+                    cook: ["Bezeleri tabak büyüklüğünde ince açın. Yarısına kıymalı harcı sürüp diğer yarısını kapatın ve kenarlarını ruletle kesin.", "Derin tavada kızdırdığınız bol yağda arkalı önlü altın sarısı olana dek 1-2 dakika kızartın."],
+                    serve: ["Kağıt havlu üzerine alıp fazla yağını süzdürün, sıcakken yanında çay veya ayranla servis edin."]
+                },
+                tips: "Kıyma harcına su eklemek böreğin içinin kuru kalmasını önler ve pişerken içeride buhar oluşturarak hamurun puf puf kabarmasını sağlar."
+            },
+            {
+                id: "bamya-corbasi", title: "Konya Bamya Çorbası", region: "İç Anadolu", city: "Konya", category: "Çorba",
+                prep: "25 dk", cook: "40 dk", diff: "Orta", cal: 290, srv: 6,
+                desc: "İpe dizilmiş kurutulmuş minik çiçek bamyaların kuzu eti ve limon suyuyla ekşili kıvamda piştiği Konya düğün sofrası klasiği.",
+                history: "Konya düğün pilavı menüsünün en prestijli başlangıcı olan çiçek bamya çorbası, ekşili tadıyla iştah açıcı özelliğiyle tanınır.",
+                ing: [[100,"gram","Kurutulmuş çiçek bamya"],[200,"gram","Minik doğranmış kuzu kuşbaşı eti"],[1,"adet","Kuru soğan (ince doğranmış)"],[1.5,"yemek kaşığı","Tereyağı ve 1 yemek kaşığı domates salçası"],[1.5,"adet","Taze sıkılmış limon suyu"],[6,"su bardağı","Sıcak su"]],
+                steps: {
+                    prep: ["İpe dizili kuru bamyaları yarım limon suyu eklenmiş kaynar suda 15 dakika haşlayın, süzüp soğuk sudan geçirerek iplerini çıkarın."],
+                    cook: ["Tencerede tereyağı ile minik kuzu etlerini kavurun, soğan ve salçayı ekleyip soteleyin.", "Sıcak suyu ve haşlanmış bamyaları ekleyin. Kalan limon suyunu ve tuzu ilave edip 25 dakika kısık ateşte pişirin."],
+                    serve: ["Sıcak kaselere alıp üzerine taze çekilmiş karabiber serperek servis yapın."]
+                },
+                tips: "Bamyaların salyalanmaması için ön haşlama suyuna ve pişirme suyuna mutlaka limon suyu ekleyin ve çok fazla karıştırmayın."
+            },
+            {
+                id: "kayseri-yaglamasi", title: "Kayseri Yağlaması (Şebit)", region: "İç Anadolu", city: "Kayseri", category: "Hamur İşi",
+                prep: "45 dk", cook: "25 dk", diff: "Orta", cal: 640, srv: 4,
+                desc: "Kat kat dizilen yumuşak şebit lavaşlarının arasına yayılan salçalı kıymalı harç ve üzerine gezdirilen sarımsaklı yoğurt şöleni.",
+                history: "Kayseri'de 'şebit' adı verilen ince mayalı lavaşların 10-12 kat üst üste dizilmesiyle hazırlanan, dilimlenerek çatalla sarılıp yenen geleneksel bir ziyafet yemeğidir.",
+                ing: [[4,"su bardağı","Un"],[1,"paket","İnstant maya (10g)"],[1.5,"su bardağı","Ilık su ve 2 yemek kaşığı sıvı yağ"],[400,"gram","Dana kıyma"],[2,"adet","Kuru soğan ve 2 adet yeşil biber"],[2,"adet","Domates ve 1.5 yemek kaşığı salça"],[1,"kase","Sarımsaklı yoğurt"]],
+                steps: {
+                    prep: ["Un, maya, tuz, sıvı yağ ve ılık suyu yoğurup 30 dakika mayalandırın. Hamuru 10 bezeye ayırıp servis tabağı büyüklüğünde açın.", "Tavada kıymayı kavurun; doğranmış soğan, biber, domates, salça ve 1 çay bardağı sıcak su ekleyerek sulu bir harç pişirin."],
+                    cook: ["Açtığınız şebit hamurlarını yağsız tavada arkalı önlü beneklenene kadar pişirin."],
+                    serve: ["Servis tabağına bir şebit koyup üzerine kıymalı harçtan yayın; tüm katları bu şekilde dizin. Dörde bölüp ortasına sarımsaklı yoğurt koyarak servis edin."]
+                },
+                tips: "Kıymalı harcın hafif sulu kalması, şebit hamurlarını yumuşatıp lezzetlerin birbirine geçmesini sağlar."
+            },
+            {
+                id: "nevzine-tatlisi", title: "Kayseri Nevzine Tatlısı", region: "İç Anadolu", city: "Kayseri", category: "Tatlı",
+                prep: "25 dk", cook: "35 dk", diff: "Kolay", cal: 470, srv: 8,
+                desc: "Tahin, ceviz ve tereyağıyla hazırlanan kıyır hamurun, üzüm pekmezli özel şerbetle buluştuğu tescilli Kayseri tatlısı.",
+                history: "Osmanlı döneminden beri Kayseri'de bayramlarda ve yeni doğum yapan annelere ikram edilen nevzine, şerbetindeki üzüm pekmezi sayesinde eşsiz bir karamel aromasına sahiptir.",
+                ing: [[125,"gram","Tereyağı (oda sıcaklığında)"],[0.5,"su bardağı","Tahin"],[0.5,"su bardağı","Süt ve yarım su bardağı sıvı yağ"],[1,"su bardağı","İri çekilmiş ceviz içi"],[3,"su bardağı","Un ve 1 paket kabartma tozu"],[2,"su bardağı","Toz şeker ve 2 su bardağı su (şerbet)"],[0.5,"su bardağı","Üzüm pekmezi (şerbete eklenecek)"]],
+                steps: {
+                    prep: ["Şeker ve suyu 12 dakika kaynatın; ocaktan alınca pekmezi ekleyip karıştırın ve soğumaya bırakın.", "Hamur malzemelerini ve cevizi yoğurup yumuşak kurabiye kıvamında bir hamur elde edin."],
+                    cook: ["Hamuru yağlanmış fırın tepsisine bastırarak yayın, üzerini çatalla çizip dilimleyin ve 180 derece fırında 30-35 dakika kızartın."],
+                    serve: ["Fırından çıkan sıcak tatlının ilk sıcağı geçince soğuk pekmezli şerbeti gezdirin, 2 saat dinlendirip servis edin."]
+                },
+                tips: "Pekmezi şerbet kaynarken değil, ocağı kapattıktan sonra eklemek pekmezin yanmasını ve acılaşmasını önler."
+            },
+
+            // ================= 2. EGE BÖLGESİ (10 YEMEK) =================
+            {
+                id: "izmir-kofte", title: "Fırında İzmir Köfte", region: "Ege", city: "İzmir", category: "Ana Yemek",
+                prep: "25 dk", cook: "35 dk", diff: "Kolay", cal: 480, srv: 4,
+                desc: "Kimyonlu parmak köfteler, elma dilim patatesler, yeşil biber ve kekikli domates sosunun fırında bütünleştiği klasik Ege yemeği.",
+                history: "İzmir'in Rum ve Türk mutfak kültürlerinin senteziyle ortaya çıkan bu yemek, hem esnaf lokantalarının hem de ev sofralarının en sevilen klasiklerinden biridir.",
+                ing: [[500,"gram","Dana kıyma"],[1,"adet","Rendelenmiş soğan ve 2 diş sarımsak"],[0.5,"su bardağı","Galeta unu veya bayat ekmek içi"],[3,"adet","Orta boy patates (elma dilim)"],[3,"adet","Yeşil sivri biber ve 2 adet domates"],[1.5,"yemek kaşığı","Domates salçası ve 1.5 su bardağı sıcak su"],[1,"çay kaşığı","Kimyon, kekik, karabiber"]],
+                steps: {
+                    prep: ["Kıyma, rendelenmiş soğan, sarımsak, galeta unu ve baharatları iyice yoğurup parmak şeklinde köfteler hazırlayın.", "Patatesleri elma dilimi doğrayıp hafifçe kızartın (veya yağlayıp fırınlayın)."],
+                    cook: ["Tepsiye bir patates bir köfte şeklinde dizin, aralarına domates ve biber dilimleri yerleştirin.", "Sıcak suda ezilmiş salça ve kekiği üzerine gezdirip 190 derece fırında 30-35 dakika pişirin."],
+                    serve: ["Yanında tereyağlı pirinç pilavı ve cacıkla sıcak olarak servis yapın."]
+                },
+                tips: "Köfteleri tepsiye dizmeden önce tavada 2 dakika mühürlemek hem şekillerinin bozulmasını önler hem de lezzetini katlar."
+            },
+            {
+                id: "zeytinyagli-enginar", title: "Zeytinyağlı Çanak Enginar", region: "Ege", city: "İzmir / Aydın", category: "Zeytinyağlı/Meze",
+                prep: "20 dk", cook: "25 dk", diff: "Kolay", cal: 210, srv: 4,
+                desc: "Taze bezelye, havuç, patates ve taze dereotuyla doldurulmuş, sızma zeytinyağı ve limon suyuyla pişen hafif Ege klasiği.",
+                history: "Urla ve Karaburun yarımadasının simgesi olan sakız enginar, bahar aylarında Ege sofralarının baş tacıdır ve zeytinyağlı kültürünün en zarif örneğidir.",
+                ing: [[6,"adet","Temizlenmiş çanak enginar"],[1,"su bardağı","Taze veya dondurulmuş bezelye"],[1,"adet","Havuç ve 1 adet patates (minik küp)"],[1,"adet","Kuru soğan (ince doğranmış)"],[0.5,"su bardağı","Natürel sızma zeytinyağı"],[1,"adet","Limon suyu ve 1 çay kaşığı toz şeker"],[0.5,"demet","Taze dereotu"]],
+                steps: {
+                    prep: ["Enginarları kararmamaları için limonlu suda bekletin. Havuç ve patatesi tavla zarı büyüklüğünde doğrayın."],
+                    cook: ["Geniş tencerede zeytinyağının yarısıyla soğanı yumuşatın; havuç, patates ve bezelyeyi ekleyip 4 dakika soteleyin.", "Enginar çanaklarını tencereye dizip sebzeli garnitürü içlerine paylaştırın. Kalan zeytinyağı, limon suyu, şeker, tuz ve 1 su bardağı sıcak suyu ekleyip kısık ateşte 25 dakika pişirin."],
+                    serve: ["Kendi tenceresinde soğuttuktan sonra üzerine ince kıyılmış taze dereotu serperek soğuk servis edin."]
+                },
+                tips: "Tüm zeytinyağlı yemeklerde olduğu gibi enginarı da kapağı kapalı şekilde kendi tenceresinde soğutmak zeytinyağının parlaklığını korur."
+            },
+            {
+                id: "sevketi-bostan", title: "Kuzu Etli Şevketi Bostan", region: "Ege", city: "İzmir / Manisa", category: "Ana Yemek",
+                prep: "30 dk", cook: "40 dk", diff: "Orta", cal: 340, srv: 4,
+                desc: "Ege dağlarından toplanan şifalı şevketi bostan otunun kuzu eti, zeytinyağı ve limonlu un terbiyesiyle buluştuğu yöresel lezzet.",
+                history: "Girit göçmenlerinin Ege mutfağına kazandırdığı en özel ot yemeklerinden biri olan şevketi bostan, hem sindirim dostu şifası hem de eşsiz terbiyesiyle bilinir.",
+                ing: [[750,"gram","Ayıklanmış şevketi bostan otu"],[300,"gram","Kuşbaşı kuzu eti"],[1,"adet","Kuru soğan"],[4,"yemek kaşığı","Zeytinyağı"],[1,"yemek kaşığı","Un (terbiyesi için)"],[1,"adet","Limon suyu"]],
+                steps: {
+                    prep: ["Ayıklanmış şevketi bostan köklerini ve yapraklarını bol suda yıkayıp 3-4 cm boyunda doğrayın."],
+                    cook: ["Tencerede zeytinyağı ile kuzu etlerini ve doğranmış soğanı kavurun.", "Şevketi bostanları ekleyip üzerini geçecek kadar sıcak su ilave edin ve 30 dakika yumuşayana dek pişirin.", "Küçük kasede un ve limon suyunu pürüzsüz çırpıp yemeğin suyundan ekleyerek ılıtın ve tencereye döküp 5 dakika daha kaynatın."],
+                    serve: ["Ilık veya sıcak olarak yanında taze köy ekmeği ile servis edin."]
+                },
+                tips: "Terbiyenin kesilmemesi için limonlu un karışımına mutlaka tenceredeki sıcak yemek suyundan birkaç kaşık ekleyip karıştırın."
+            },
+            {
+                id: "cokertme-kebabi", title: "Bodrum Çökertme Kebabı", region: "Ege", city: "Muğla / Bodrum", category: "Ana Yemek",
+                prep: "30 dk", cook: "20 dk", diff: "Orta", cal: 620, srv: 4,
+                desc: "Kibrit çöpü inceliğinde çıtır kızarmış patates yatağı üzerinde süzme yoğurt, marine bonfile dilimleri ve domates sosu.",
+                history: "Adını Bodrum'un Çökertme köyünden alan bu kebap, incecik doğranmış patateslerin çıtırlığı ile marine edilmiş yumuşacık bonfilenin kontrastıyla Ege'nin en popüler ana yemeğidir.",
+                ing: [[500,"gram","Dana bonfile (ince jülyen doğranmış)"],[4,"adet","Büyük boy patates (kibrit çöpü doğranmış)"],[1,"kase","Süzme yoğurt ve 2 diş sarımsak"],[2,"adet","Rendelenmiş domates ve 1 yemek kaşığı salça"],[3,"yemek kaşığı","Zeytinyağı, kekik, pul biber"],[1.5,"su bardağı","Ayçiçek yağı (patatesleri kızartmak için)"]],
+                steps: {
+                    prep: ["Bonfile dilimlerini zeytinyağı, kekik ve karabiberle 30 dakika marine edin. Kibrit çöpü doğranmış patatesleri nişastası gidene dek yıkayıp iyice kurulayın."],
+                    cook: ["Patatesleri kızgın yağda çıtır çıtır kızartıp kağıt havluya alın.", "Tavada domates ve salçayı 1 kaşık yağla pişirip sos hazırlayın. Ayrı döküm tavada marine bonfileleri yüksek ateşte 5-6 dakika mühürleyin."],
+                    serve: ["Tabağın tabanına çıtır patatesleri yayın, üzerine sarımsaklı yoğurt, domates sosu ve en üste sıcak bonfile dilimlerini yerleştirin."]
+                },
+                tips: "Patateslerin yumuşamaması için servis anından hemen önce kızartın ve yoğurdu patateslerin üzerine tüm yüzeyi ıslatmayacak şekilde gezdirin."
+            },
+            {
+                id: "yaprak-sarma", title: "Zeytinyağlı Ege Yaprak Sarma", region: "Ege", city: "Manisa / İzmir", category: "Zeytinyağlı/Meze",
+                prep: "45 dk", cook: "45 dk", diff: "Orta", cal: 280, srv: 6,
+                desc: "Manisa'nın ince damarsız sultaniye asma yapraklarına sarılan dolmalık fıstıklı, kuş üzümlü, tarçınlı ve bol naneli pirinç harcı.",
+                history: "Ege'de zeytinyağlı sarma; kalem gibi ince sarılması, iç harcındaki kuş üzümü ve tarçının hafif tatlılığı ile bol limonlu zeytinyağı dengesiyle sanat eseri kabul edilir.",
+                ing: [[300,"gram","Salamura veya taze asma yaprağı"],[1.5,"su bardağı","Baldo pirinç"],[2,"adet","Büyük kuru soğan (ince doğranmış)"],[0.5,"su bardağı","Sızma zeytinyağı"],[2,"yemek kaşığı","Dolmalık fıstık ve 2 yemek kaşığı kuş üzümü"],[1,"çay kaşığı","Yenibahar, tarçın, kuru nane, karabiber"],[1,"adet","Limon (dilimlenmiş)"]],
+                steps: {
+                    prep: ["Salamura yaprakları sıcak suda 10 dakika bekletip tuzunu alın. Soğanları zeytinyağında fıstıklarla pembeleşene dek kavurun.", "Pirinç, kuş üzümü ve baharatları ekleyip 1 su bardağı sıcak suyla iç harcı hafif diriyken demlendirin."],
+                    cook: ["Yaprakların parlak yüzü alta gelecek şekilde iç harçtan koyup kalem gibi ince sarın.", "Tencereye dizip üzerine limon dilimleri, zeytinyağı ve üzerini hafif geçecek sıcak su ekleyerek kısık ateşte 40 dakika pişirin."],
+                    serve: ["Tencerede soğuduktan sonra limon dilimleriyle süsleyerek soğuk servis yapın."]
+                },
+                tips: "Sarmaların parlak görünmesi için pişmeye yakın üzerine 2 yemek kaşığı ekstra soğuk sıkım zeytinyağı gezdirin."
+            },
+            {
+                id: "kabak-cicegi-dolmasi", title: "Kabak Çiçeği Dolması", region: "Ege", city: "Muğla / Çeşme", category: "Zeytinyağlı/Meze",
+                prep: "35 dk", cook: "25 dk", diff: "Ustalık İster", cal: 240, srv: 4,
+                desc: "Sabahın ilk ışıklarıyla güneş açmadan toplanan taze kabak çiçeklerinin içine doldurulan otlu, pirinçli zeytinyağlı harç.",
+                history: "Girit ve Ege kıyı mutfağının en narin yemeğidir. Kabak çiçekleri öğlen sıcağında kapandığı için yalnızca sabah erken saatlerde toplanarak taze taze doldurulur.",
+                ing: [[20,"adet","Taze kabak çiçeği"],[1,"su bardağı","Pirinç"],[2,"adet","Kuru soğan (ince kıyılmış)"],[0.5,"demet","Taze dereotu, nane ve maydanoz"],[0.5,"su bardağı","Zeytinyağı"],[1,"adet","Domates (rendelenmiş) ve yarım limon suyu"]],
+                steps: {
+                    prep: ["Kabak çiçeklerinin içindeki sarı polen kısmını yırtmadan dikkatlice çıkarın ve sudan geçirip süzün.", "Soğanı zeytinyağında kavurup pirinç, rendelenmiş domates, taze otlar ve baharatlarla iç harcı hazırlayın."],
+                    cook: ["Çiçeklerin içine yarısına kadar harç doldurup yaprak uçlarını üst üste katlayarak kapatın.", "Tencereye yan yana dizip üzerine zeytinyağı, limon suyu ve yarım çay bardağı sıcak su ekleyerek 20-25 dakika pişirin."],
+                    serve: ["Ilık veya soğuk olarak süzme yoğurt eşliğinde servis edin."]
+                },
+                tips: "Çiçeklerin pişerken patlamaması için iç harcı tamamen ağzına kadar doldurmayın; pirincin şişme payını mutlaka bırakın."
+            },
+            {
+                id: "izmir-boyoz", title: "İzmir Boyozu", region: "Ege", city: "İzmir", category: "Hamur İşi",
+                prep: "50 dk", cook: "25 dk", diff: "Ustalık İster", cal: 380, srv: 6,
+                desc: "Kat kat açılan yağlı hamurun rulo yapılıp dinlendirilmesiyle pişen, yanında haşlanmış yumurta ve çayla İzmir sabahlarının simgesi.",
+                history: "1492 yılında Sefarad Yahudilerinin İzmir'e getirdiği 'bollos' (küçük somun) geleneğinden doğmuş, zamanla İzmir'e özgü bir sokak ve kahvaltı kültürüne dönüşmüştür.",
+                ing: [[4,"su bardağı","Un"],[1.5,"su bardağı","Su ve 1 tatlı kaşığı tuz"],[1,"su bardağı","Ayçiçek yağı ve 2 yemek kaşığı tahin (yağlamak için)"],[6,"adet","Haşlanmış yumurta (servis için)"]],
+                steps: {
+                    prep: ["Un, su ve tuzu pürüzsüz olana dek yoğurun, bezeler yapıp sıvı yağ dolu kapta 30 dakika dinlendirin.", "Yağlanan hamuru elinizle çarşaf gibi incecik açın, üzerine tahin-yağ karışımı sürüp rulo yapın ve kendi etrafında dolayarak 1 saat daha dinlendirin."],
+                    cook: ["Tepsiye dizdiğiniz boyozları 220 derece önceden ısıtılmış fırında 20-25 dakika dışı çıtır içi kat kat olana dek pişirin."],
+                    serve: ["Sıcak boyozları karabiberli haşlanmış yumurta ve tavşan kanı çay ile servis edin."]
+                },
+                tips: "Boyoz hamurunda maya veya kabartma tozu bulunmaz; kabarmasını ve katmanlarını sağlayan tek sır bol yağ içinde dinlendirilmesidir."
+            },
+            {
+                id: "ege-keskek", title: "Geleneksel Düğün Keşkeği", region: "Ege", city: "Aydın / Denizli", category: "Ana Yemek",
+                prep: "30 dk", cook: "90 dk", diff: "Orta", cal: 510, srv: 6,
+                desc: "Aşurelik buğday ve kemikli etin saatlerce pişirilip tahta tokmakla dövülerek sakız kıvamına getirildiği UNESCO miraslı tören yemeği.",
+                history: "UNESCO Somut Olmayan Kültürel Miras Listesi'nde yer alan keşkek, Ege'de düğün ve bayramlarda imece usulü kazanlarda dövülerek pişirilir.",
+                ing: [[2,"su bardağı","Aşurelik buğday (1 gece ıslatılmış)"],[500,"gram","Kemikli kuzu gerdan veya dana incik"],[3,"yemek kaşığı","Tereyağı"],[1,"tatlı kaşığı","Kırmızı toz biber"],[6,"su bardağı","Su ve tuz"]],
+                steps: {
+                    prep: ["Bir gece önceden ıslattığınız buğdayı yıkayıp süzün."],
+                    cook: ["Büyük tencerede etleri ve buğdayı su ile birlikte etler kemikten ayrılana dek yaklaşık 1.5 saat pişirin.", "Kemikleri çıkarıp etleri didikleyin. Tahta kaşık veya tokmakla buğday ve eti iyice ezerek macun/sakız kıvamına gelene dek dövün."],
+                    serve: ["Tabaklara aldığınız keşkeğin üzerine kızdırılmış kırmızı toz biberli tereyağı gezdirerek sıcak servis yapın."]
+                },
+                tips: "Keşkeğin gerçek kıvamını alması için buğday tanelerinin tamamen ezilip et lifleriyle bütünleşene kadar kuvvetlice dövülmesi şarttır."
+            },
+            {
+                id: "cesme-kumru", title: "Çeşme Kumrusu", region: "Ege", city: "İzmir / Çeşme", category: "Hamur İşi",
+                prep: "20 dk", cook: "10 dk", diff: "Kolay", cal: 590, srv: 4,
+                desc: "Nohut mayalı susamlı özel ekmek arasında ızgara sucuk, salam, sosis ve erimiş İzmir tulum peynirinin efsanevi buluşması.",
+                history: "Adını şekli kumru kuşuna benzeyen susamlı özel ekmeğinden alan bu lezzet, Çeşme'de doğup tüm Türkiye'nin en sevilen sıcak sandviçine dönüşmüştür.",
+                ing: [[4,"adet","Susamlı kumru ekmeği"],[200,"gram","Dana sucuk (ince dilimlenmiş)"],[150,"gram","Dana salam ve 4 adet sosis"],[200,"gram","İzmir tulum peyniri veya kaşar peyniri"],[2,"adet","Domates ve 4 adet kornişon turşu"],[1,"yemek kaşığı","Tereyağı"]],
+                steps: {
+                    prep: ["Sucuk, salam ve sosisleri ince uzun şeritler halinde dilimleyin. Kumru ekmeklerini ortadan ikiye kesin."],
+                    cook: ["Izgara tavada sucuk, salam ve sosisleri kendi yağında kızartın. Üzerine dilimlenmiş peynirleri koyup erimesini bekleyin.", "Ekmeklerin iç yüzeyini tereyağı ile tavada hafifçe kızartın."],
+                    serve: ["Kızarmış ekmeğin arasına erimiş peynirli şarküteri karışımını, domates dilimlerini ve turşuyu yerleştirip sıcak servis yapın."]
+                },
+                tips: "Orijinal Çeşme kumrusunun en önemli farkı, sıradan kaşar yerine eridiğinde hafif tuzlu ve yoğun aroma veren İzmir tulum peyniri kullanılmasıdır."
+            },
+            {
+                id: "izmir-lokma", title: "İzmir Saray Lokması", region: "Ege", city: "İzmir", category: "Tatlı",
+                prep: "45 dk", cook: "15 dk", diff: "Orta", cal: 410, srv: 6,
+                desc: "Dışı cam gibi çıtır, içi sünger gibi yumuşak mayalı hamur toplarının soğuk şerbet ve tarçınla buluştuğu Ege geleneği.",
+                history: "İzmir'de hayır ve kutlama günlerinde sokaklarda dökülüp halka ikram edilen lokma, paylaşma kültürünün en tatlı simgesidir.",
+                ing: [[2.5,"su bardağı","Un"],[1,"paket","İnstant maya (10g)"],[1.5,"su bardağı","Ilık su ve 1 tatlı kaşığı toz şeker"],[2.5,"su bardağı","Toz şeker ve 2 su bardağı su (şerbet)"],[2,"su bardağı","Ayçiçek yağı (kızartmak için)"],[1,"tatlı kaşığı","Tarçın (servis için)"]],
+                steps: {
+                    prep: ["Şeker ve suyu 15 dakika kaynatıp birkaç damla limon suyu sıkın ve tamamen soğumaya bırakın.", "Un, maya, şeker, bir tutam tuz ve ılık suyu çırparak kek hamurundan biraz koyu akışkan bir hamur hazırlayın; 40 dakika mayalandırın."],
+                    cook: ["Avucunuza aldığınız hamuru baş ve işaret parmağınız arasından sıkıp yağa batırılmış tatlı kaşığıyla keserek kızgın yağa atın.", "Altın rengi olana dek kızartıp kevgirle doğrudan soğuk şerbetin içine aktarın."],
+                    serve: ["Şerbette 1-2 dakika bekleyen lokmaları servis tabağına alın, üzerine tarçın serperek çıtır çıtır servis edin."]
+                },
+                tips: "Lokmanın hamurlaşmadan çıtır kalması için şerbetin buz gibi soğuk, kızaran lokmaların ise sıcak olması gerekir."
+            },
+
+            // ================= 3. KARADENİZ BÖLGESİ (10 YEMEK) =================
+            {
+                id: "mihlama-kuymak", title: "Trabzon & Rize Mıhlama (Kuymak)", region: "Karadeniz", city: "Trabzon / Rize", category: "Hamur İşi",
+                prep: "10 dk", cook: "15 dk", diff: "Kolay", cal: 530, srv: 4,
+                desc: "Yayla tereyağı, kavrulmuş fırınlanmış mısır unu ve metrelerce uzayan telli kolot peyniri ile Karadeniz kahvaltılarının sultanı.",
+                history: "Doğu Karadeniz yaylalarının yüksek enerjili temel besini olan mıhlama/kuymak, tereyağının peynirin üzerine çıkması ('yağını kusması') ile ustalığını gösterir.",
+                ing: [[3,"yemek kaşığı","Tuzsuz Trabzon yayla tereyağı"],[3,"yemek kaşığı","Fırınlanmış Karadeniz mısır unu"],[1.5,"su bardağı","Sıcak su"],[250,"gram","Telli Trabzon kolot peyniri (veya çeçil peyniri)"]],
+                steps: {
+                    prep: ["Kolot peynirini ince şeritler halinde tel tel ayırın."],
+                    cook: ["Bakır tavada tereyağını eritin. Mısır ununu ekleyip rengi hafif dönene ve kokusu çıkana dek 3 dakika kavurun.", "Sıcak suyu azar azar ekleyip topaklanmaması için sürekli karıştırın. Su kaynayınca peynirleri ilave edin.", "Kısık ateşte karıştırmadan peynirler eriyip tereyağı yüzeye çıkana dek 4-5 dakika pişirin."],
+                    serve: ["Bakır tavasında sıcak sıcak, yanında taze mısır ekmeği ile servis edin."]
+                },
+                tips: "Peyniri ekledikten sonra çok fazla karıştırmamak, peynirin uzama özelliğini koruması ve yağının üste çıkması için önemlidir."
+            },
+            {
+                id: "hamsi-tava", title: "Çıtır Karadeniz Hamsi Tava", region: "Karadeniz", city: "Trabzon / Ordu", category: "Ana Yemek",
+                prep: "25 dk", cook: "15 dk", diff: "Orta", cal: 410, srv: 4,
+                desc: "Mısır ununa bulanıp hamsi tavasında çiçek gibi dizilerek az yağda nar gibi kızartılan Karadeniz'in incisi.",
+                history: "Karadeniz insanı için hamsi sadece bir balık değil, türkülere ve fıkralara konu olan bir yaşam kültürüdür. Özellikle Kasım-Şubat arası yağlanan hamsinin tavası eşsizdir.",
+                ing: [[1,"kilogram","Taze Karadeniz hamsisi (ayıklanmış)"],[1,"su bardağı","Mısır unu"],[1,"çay kaşığı","Tuz"],[4,"yemek kaşığı","Ayçiçek yağı"],[1,"adet","Kırmızı soğan ve 1 demet roka (salata için)"]],
+                steps: {
+                    prep: ["Ayıklanmış ve kılçığı çıkarılmış hamsileri yıkayıp süzgeçte iyice süzün, tuzlayın.", "Hamsileri mısır ununa bulayıp fazla ununu silkeleyin."],
+                    cook: ["Yağlanmış geniş tavaya hamsileri kuyrukları ortaya gelecek şekilde sıkıca yan yana dizin.", "Orta ateşte alt yüzü kızarana dek 6-7 dakika pişirin. Düz bir kapak yardımıyla ters çevirip diğer yüzünü de 5 dakika kızartın."],
+                    serve: ["Sumaklı kırmızı soğan salatası, roka ve limon dilimleriyle sıcak servis yapın."]
+                },
+                tips: "Hamsileri tavaya dizmeden önce tamamen suyunun süzülmesi, mısır ununun hamurlaşmadan çıtır kalmasını sağlar."
+            },
+            {
+                id: "akcaabat-koftesi", title: "Akçaabat Köftesi", region: "Karadeniz", city: "Trabzon / Akçaabat", category: "Ana Yemek",
+                prep: "25 dk", cook: "15 dk", diff: "Kolay", cal: 495, srv: 4,
+                desc: "Sarımsak, bayat Vakfıkebir ekmeği ve dana etinin uyumuyla yüksek ateşte ızgarada pişen tescilli Trabzon köftesi.",
+                history: "1930'larda Akçaabat'taki lokantacıların geliştirdiği bu tarif, içindeki taze sarımsak aroması ve sulu dokusuyla coğrafi işaret almıştır.",
+                ing: [[600,"gram","Dana döş ve kaburga kıyma"],[1,"su bardağı","Bayat Vakfıkebir ekmeği içi (ufalanmış)"],[4,"diş","Sarımsak (ezilmiş)"],[1.5,"çay kaşığı","Tuz ve yarım çay kaşığı karabiber"],[4,"adet","Domates ve 4 adet yeşil biber (ızgara için)"]],
+                steps: {
+                    prep: ["Kıyma, ufalanmış ekmek içi, ezilmiş sarımsak ve tuzu 10 dakika iyice yoğurun ve buzdolabında 2 saat dinlendirin.", "Harçtan yassı yuvarlak köfteler şekillendirin."],
+                    cook: ["Isıtılmış ızgara veya döküm tavada köftelerin iki yüzünü de 4-5 dakika pişirin."],
+                    serve: ["Közlenmiş biber, domates ve piyaz eşliğinde sıcak servis yapın."]
+                },
+                tips: "Akçaabat köftesine soğan konmaz; aromasını yalnızca taze sarımsak ve kaliteli dana etinden alır."
+            },
+            {
+                id: "karalahana-corbasi", title: "Karalahana Çorbası (Pancari Çorbası)", region: "Karadeniz", city: "Rize / Giresun", category: "Çorba",
+                prep: "20 dk", cook: "35 dk", diff: "Kolay", cal: 270, srv: 6,
+                desc: "İnce kıyılmış karalahana, barbunya fasulyesi, mısır yarması ve iç yağı/tereyağı ile pişen şifalı Karadeniz çorbası.",
+                history: "Yıl boyu yeşil kalan karalahana, Karadeniz mutfağının en temel sebzesidir. Özellikle soğuk ve yağışlı havalarda sofraların başköşesinde yer alır.",
+                ing: [[1,"bağ","Taze karalahana (ince kıyılmış)"],[1,"su bardağı","Haşlanmış barbunya fasulyesi"],[0.5,"su bardağı","Mısır yarması (veya bulgur)"],[2,"yemek kaşığı","Tereyağı ve 1 yemek kaşığı mısır unu"],[1,"adet","Kuru soğan ve 1 yemek kaşığı salça"],[6,"su bardağı","Sıcak su ve pul biber"]],
+                steps: {
+                    prep: ["Karalahana yapraklarını yıkayıp ince şeritler halinde kıyın, kaynar suda 5 dakika haşlayıp acı suyunu süzün."],
+                    cook: ["Tencerede tereyağı ile doğranmış soğan ve salçayı kavurun. Kıyılmış karalahana, haşlanmış barbunya ve mısır yarmasını ekleyin.", "Sıcak suyu ilave edip 25 dakika pişirin. Ayrı kapta 1 kaşık mısır ununu suyla açıp çorbaya bağlayın ve 5 dakika daha kaynatın."],
+                    serve: ["Üzerine pul biber gezdirip yanında mısır ekmeği ile sıcak servis edin."]
+                },
+                tips: "Karalahananın ilk haşlama suyunu dökmek çorbanın daha hafif ve lezzetli olmasını sağlar."
+            },
+            {
+                id: "laz-boregi", title: "Karadeniz Laz Böreği", region: "Karadeniz", city: "Artvin / Rize", category: "Tatlı",
+                prep: "45 dk", cook: "35 dk", diff: "Ustalık İster", cal: 460, srv: 8,
+                desc: "İncecik baklava yufkaları arasında karabiberli özel muhallebi ve üzerinde çıtır katmanlarla şerbetlenen şaşırtıcı Karadeniz tatlısı.",
+                history: "Adı 'börek' olsa da şerbetli ve muhallebili bir tatlıdır. Muhallebisinin içine katılan bir tutam taze çekilmiş karabiber, tatlıya benzersiz bir aroma derinliği kazandırır.",
+                ing: [[24,"adet","Baklavalık yufka (veya el açması yufka)"],[150,"gram","Eritilmiş tereyağı"],[4,"su bardağı","Süt (muhallebi için)"],[4,"yemek kaşığı","Un ve 2 yemek kaşığı nişasta"],[1,"su bardağı","Toz şeker ve 1 adet yumurta sarısı"],[0.5,"çay kaşığı","Taze çekilmiş karabiber (muhallebiye)"],[2,"su bardağı","Toz şeker ve 2 su bardağı su (şerbet)"]],
+                steps: {
+                    prep: ["Şeker ve suyu 12 dakika kaynatıp soğumaya bırakın. Muhallebi için süt, un, nişasta, şeker ve yumurta sarısını pişirip ocaktan alınca karabiber ve vanilyayı ekleyin."],
+                    cook: ["Yağlanmış tepsiye 12 kat yufkayı aralarına eritilmiş tereyağı sürerek serin. Üzerine muhallebiyi yayın.", "Kalan 12 yufkayı da aynı şekilde yağlayarak üzerine kapatın, dilimleyin ve 180 derece fırında 35 dakika kızartın."],
+                    serve: ["Fırından çıkan sıcak tatlının ilk sıcağı geçince soğuk şerbeti gezdirin, dinlendirip servis edin."]
+                },
+                tips: "Laz böreğinin en karakteristik sırrı muhallebisindeki yarım çay kaşığı taze çekilmiş karabiberdir; kesinlikle atlamayın."
+            },
+            {
+                id: "hamsili-pilav", title: "Hamsili Pilav", region: "Karadeniz", city: "Trabzon / Rize", category: "Ana Yemek",
+                prep: "40 dk", cook: "35 dk", diff: "Ustalık İster", cal: 520, srv: 4,
+                desc: "Kuş üzümlü, fıstıklı ve baharatlı iç pilavın kılçığı alınmış hamsilerle bohça gibi sarılarak fırında pişirildiği görkemli yemek.",
+                history: "Karadeniz mutfağının başyapıtı kabul edilen hamsili pilav, hem deniz ürününün hem de Osmanlı iç pilav kültürünün kusursuz birleşimidir.",
+                ing: [[750,"gram","Taze hamsi (kılçığı çıkarılmış)"],[1.5,"su bardağı","Pirinç"],[2,"adet","Kuru soğan (ince doğranmış)"],[2,"yemek kaşığı","Tereyağı ve 2 yemek kaşığı mısır unu"],[2,"yemek kaşığı","Dolmalık fıstık ve 2 yemek kaşığı kuş üzümü"],[0.5,"demet","Dereotu ve taze nane"],[1,"çay kaşığı","Yenibahar, tarçın, karabiber"]],
+                steps: {
+                    prep: ["Soğanları tereyağında fıstıklarla kavurun; pirinç, kuş üzümü, baharatlar ve 2 su bardağı sıcak su ekleyip iç pilavı demleyin, ince kıyılmış yeşillikleri karıştırın."],
+                    cook: ["Tereyağı ile yağlanıp mısır unu serpilmiş fırın kabının taban ve kenarlarına hamsilerin derili kısımları dışa gelecek şekilde dizin.", "Ortasına iç pilavı doldurun, kenardan sarkan hamsileri üzerine kapatın. 190 derece fırında 30 dakika nar gibi kızartın."],
+                    serve: ["Fırın kabını geniş bir servis tabağına ters çevirerek dilimleyip sıcak servis edin."]
+                },
+                tips: "Kalıbı ters çevirirken dağılmaması için hamsileri birbirinin üzerine hafifçe binecek şekilde boşluksuz dizin."
+            },
+            {
+                id: "bafra-pidesi", title: "Kapalı Bafra Pidesi", region: "Karadeniz", city: "Samsun / Bafra", category: "Hamur İşi",
+                prep: "45 dk", cook: "20 dk", diff: "Orta", cal: 560, srv: 4,
+                desc: "Kıyması önceden soğanla kavrularak hazırlanan, ince uzun kapalı formda pişirilip çıkınca bol tereyağıyla yağlanan Samsun klasiği.",
+                history: "Samsun'un Bafra ilçesinde doğan bu pide, iç harcının çiğ değil kavrulmuş kıymadan yapılması ve çıtır ince hamuruyla diğer Karadeniz pidelerinden ayrılır.",
+                ing: [[4,"su bardağı","Un"],[1,"paket","İnstant maya (10g)"],[1.5,"su bardağı","Ilık su"],[400,"gram","Dana kıyma"],[3,"adet","Kuru soğan (ince doğranmış)"],[3,"yemek kaşığı","Tereyağı (üzerine sürmek için)"],[1,"çay kaşığı","Karabiber ve tuz"]],
+                steps: {
+                    prep: ["Hamuru yoğurup 30 dakika mayalandırın. Tavada kıymayı kavurun, bol doğranmış soğan ve karabiberi ekleyip soğanlar yumuşayana dek pişirip soğutun."],
+                    cook: ["Bezeleri ince uzun açın, ortasına soğumuş kıymalı harcı koyup kenarlarını üstte birleştirerek kapatın.", "230 derece önceden ısıtılmış fırında 15-18 dakika çıtırlaşana dek pişirin."],
+                    serve: ["Fırından çıkar çıkmaz üzerine bol tereyağı sürün, dilimleyerek sıcak servis edin."]
+                },
+                tips: "Bafra pidesinin hamurunun yırtılmaması için kıymalı harcı hamurun içine mutlaka tamamen soğuduktan sonra koyun."
+            },
+            {
+                id: "karalahana-sarmasi", title: "Etli Karalahana Sarması", region: "Karadeniz", city: "Ordu / Giresun", category: "Ana Yemek",
+                prep: "40 dk", cook: "45 dk", diff: "Orta", cal: 390, srv: 6,
+                desc: "Haşlanmış taze karalahana yapraklarına sarılan bulgurlu, kıymalı ve salçalı harcın tereyağlı sosla piştiği Karadeniz sofrası klasiği.",
+                history: "Karadeniz'de 'pancar sarması' olarak da bilinen bu yemek, bulgur ve pirincin kıyma ile birleşimiyle oldukça doyurucu bir ana yemektir.",
+                ing: [[2,"bağ","Geniş yapraklı karalahana"],[250,"gram","Orta yağlı dana kıyma"],[0.5,"su bardağı","Pirinç ve yarım su bardağı pilavlık bulgur"],[2,"adet","Kuru soğan (ince doğranmış)"],[1.5,"yemek kaşığı","Domates salçası ve 2 yemek kaşığı tereyağı"],[0.5,"demet","Maydanoz, dereotu ve kuru nane"]],
+                steps: {
+                    prep: ["Karalahana yapraklarını kaynar suda 3-4 dakika yumuşatıp soğuk suya alın, kalın orta damarlarını kesin.", "Kıyma, pirinç, bulgur, doğranmış soğan, salça, yeşillikler ve baharatlarla iç harcı yoğurun."],
+                    cook: ["Yaprakların içine harç koyup kalem kalınlığında sarın ve tencereye dizin.", "Üzerine salçalı sıcak su ve tereyağı parçaları ekleyip kısık ateşte 40-45 dakika pişirin."],
+                    serve: ["Yanında sarımsaklı süzme yoğurt ve mısır ekmeği ile sıcak servis edin."]
+                },
+                tips: "Sarmaların dağılmaması için tencereye dizdikten sonra üzerine ısıya dayanıklı düz bir porselen tabak kapatarak pişirin."
+            },
+            {
+                id: "karadeniz-misir-ekmegi", title: "Taş Fırın Usulü Mısır Ekmeği", region: "Karadeniz", city: "Trabzon / Rize", category: "Hamur İşi",
+                prep: "15 dk", cook: "35 dk", diff: "Kolay", cal: 310, srv: 6,
+                desc: "Karalahana çorbasının, hamsinin ve yoğurdun ayrılmaz eşlikçisi; altın sarısı rengi ve mis kokusuyla geleneksel mısır ekmeği.",
+                history: "Buğday tarımının zor olduğu dik Karadeniz yamaçlarında yüzyıllardır temel ekmek olarak üretilen mısır ekmeği, glütensiz dokusu ve yoğun aromasıyla tanınır.",
+                ing: [[3,"su bardağı","Karadeniz mısır unu"],[1.5,"su bardağı","Kaynar su"],[0.5,"su bardağı","Sıvı yağ veya eritilmiş tereyağı"],[1,"tatlı kaşığı","Tuz ve 1 çay kaşığı kabartma tozu"]],
+                steps: {
+                    prep: ["Mısır unu ve tuzu geniş kaba alın. Üzerine kaynar suyu azar azar döküp kaşıkla karıştırarak hamuru haşlayın.", "Hamur ılıyınca sıvı yağ ve kabartma tozunu ekleyip elinizle toparlayın."],
+                    cook: ["Yağlanmış küçük tepsiye hamuru 2-3 cm kalınlığında bastırarak yayın. 200 derece fırında üzeri kızarana dek 35 dakika pişirin."],
+                    serve: ["Dilimleyip sıcak olarak tereyağı, yoğurt veya Karadeniz çorbalarıyla servis edin."]
+                },
+                tips: "Mısır ununu mutlaka kaynar suyla yoğurmak (haşlamak), ekmek piştikten sonra dağılmasını önler ve yumuşak kalmasını sağlar."
+            },
+            {
+                id: "pepecura", title: "Kokulu Üzüm Tatlısı (Pepeçura)", region: "Karadeniz", city: "Rize / Artvin", category: "Tatlı",
+                prep: "20 dk", cook: "20 dk", diff: "Kolay", cal: 220, srv: 4,
+                desc: "Doğu Karadeniz'in mis kokulu siyah kokulu üzümleri (İsabella) ve mısır unuyla hazırlanan mor renkli geleneksel pelte tatlısı.",
+                history: "Laz ve Gürcü mutfak kültürlerinin ortak mirası olan pepeçura, sonbaharda hasat edilen kokulu siyah üzümlerin şırasıyla şekersiz veya az şekerli olarak hazırlanır.",
+                ing: [[1,"kilogram","Siyah kokulu üzüm (veya çekirdeksiz siyah üzüm)"],[3,"yemek kaşığı","Mısır unu"],[2,"yemek kaşığı","Buğday nişastası"],[0.5,"su bardağı","Toz şeker (üzümün tatlılığına göre)"],[4,"su bardağı","Su"],[0.5,"su bardağı","Dövülmüş fındık (süslemek için)"]],
+                steps: {
+                    prep: ["Üzümleri yıkayıp suyla birlikte 15 dakika kaynatın. Tel süzgeçten iyice ezerek geçirin ve koyu mor üzüm suyunu elde edin."],
+                    cook: ["Üzüm suyuna şeker, mısır unu ve nişastayı ekleyip soğukken çırpın.", "Orta ateşte sürekli karıştırarak göz göz kaynayıp muhallebi kıvamı alana dek 8-10 dakika pişirin."],
+                    serve: ["Kaselere paylaştırıp soğutun, üzerine Karadeniz fındığı serperek servis yapın."]
+                },
+                tips: "Pepeçuranın özgün aroması mısır unundan gelir; nişastayı tamamen mısır unuyla değiştirerek daha yoğun köy usulü bir tat elde edebilirsiniz."
+            },
+
+            // ================= 4. AKDENİZ BÖLGESİ (10 YEMEK) =================
+            {
+                id: "adana-kebap", title: "Zırh Kıymalı Adana Kebap", region: "Akdeniz", city: "Adana", category: "Ana Yemek",
+                prep: "30 dk", cook: "15 dk", diff: "Ustalık İster", cal: 630, srv: 4,
+                desc: "Erkek kuzu etinin kuyruk yağı ve kapya biberle zırhta çekilip geniş demir şişlerde köz ateşinde pişirildiği tescilli kebap.",
+                history: "Coğrafi işaretli Adana Kebabı, kıyma makinesi yerine 'zırh' adı verilen iki saplı özel bıçakla etin ezilmeden kıyılması ve soğan/sarımsak katılmamasıyla gerçek kimliğini bulur.",
+                ing: [[600,"gram","Yağlı erkek kuzu kıyma (zırh çekimi)"],[100,"gram","Kuyruk yağı (ince çekilmiş)"],[2,"adet","Kırmızı kapya biber (ince kıyılmış, suyu sıkılmış)"],[1,"tatlı kaşığı","Acı pul biber ve 1.5 çay kaşığı tuz"],[4,"adet","Lavaş ekmeği, sumaklı soğan ve köz domates"]],
+                steps: {
+                    prep: ["Zırh kıyması, kuyruk yağı, suyu iyice sıkılmış kapya biber, pul biber ve tuzu 10 dakika yoğurup buzdolabında 2 saat dinlendirin.", "Elinizi ılık suya batırarak harcı geniş yassı kebap şişlerine sıkıca saplayın."],
+                    cook: ["Köz ateşinde veya yüksek ısıtılmış döküm ızgarada şişleri sık sık çevirerek yağını lavaşlara emdire emdire 10-12 dakika pişirin."],
+                    serve: ["Yağlanmış sıcak lavaşların üzerinde sumaklı soğan salatası, közlenmiş biber ve domatesle servis yapın."]
+                },
+                tips: "Etin şişten dökülmemesi için kapya biberin suyunu tülbentle mutlaka sıkın ve et karışımını şişe takmadan önce soğutun."
+            },
+            {
+                id: "mersin-tantuni", title: "Mersin Tantuni", region: "Akdeniz", city: "Mersin", category: "Ana Yemek",
+                prep: "20 dk", cook: "15 dk", diff: "Kolay", cal: 510, srv: 4,
+                desc: "Ortası çukur özel tantuni sacında pamuk yağı, toz biber ve su buharıyla kavrulan minik dana etlerinin sumaklı soğanla dürümü.",
+                history: "Mersin liman işçilerinin pratik ve besleyici öğünü olarak doğan tantuni, sacın ortasındaki yağa batırılan sıcak lavaş ve buharla yumuşayan minik etleriyle efsaneleşmiştir.",
+                ing: [[500,"gram","Minik kuşbaşı doğranmış dana biftek veya antrikot"],[4,"yemek kaşığı","Pamuk yağı veya ayçiçek yağı"],[1,"tatlı kaşığı","Kırmızı toz biber ve kimyon"],[1,"su bardağı","Sıcak su (sacda buhar yapmak için)"],[2,"adet","Kuru soğan (sumaklı), 2 domates ve maydanoz"],[4,"adet","İnce lavaş ekmeği"]],
+                steps: {
+                    prep: ["Minik doğranmış etleri tencerede yumuşayana dek ön haşlama yapıp süzün. Soğanı piyazlık doğrayıp sumak ve maydanozla harmanlayın."],
+                    cook: ["Geniş sac veya tavada yağı kızdırın, haşlanmış etleri ekleyip toz biber ve tuzla kavurun.", "Ara ara sacın kenarına sıcak su döküp çıkan buharla etleri yumuşatın ve lavaşları etin yağına bastırın."],
+                    serve: ["Yağlı lavaşın içine sıcak etleri, domates küplerini ve sumaklı soğanı koyup dürüm yapın, limonla servis edin."]
+                },
+                tips: "Tantuninin kuru kalmaması için kavurma sırasında tavaya azar azar su ekleyerek buhar oluşturmak en önemli ustalık sırrıdır."
+            },
+            {
+                id: "antakya-kunefesi", title: "Antakya Künefesi", region: "Akdeniz", city: "Hatay / Antakya", category: "Tatlı",
+                prep: "20 dk", cook: "15 dk", diff: "Orta", cal: 540, srv: 4,
+                desc: "Tereyağı ile harmanlanmış çıtır tel kadayıfın arasında uzayan tuzsuz künefe peyniri, sıcak şerbet ve bol yeşil Antep fıstığı.",
+                history: "Hatay'ın coğrafi işaretli tatlısı olan künefe, özel tuzsuz inek sütü peyniri ile şerbetin tuzlu-tatlı dengesini sunan sıcak bir başyapıttır.",
+                ing: [[300,"gram","Taze tel kadayıf"],[200,"gram","Tuzsuz künefe peyniri (veya dil peyniri)"],[120,"gram","Tereyağı (oda sıcaklığında)"],[1,"tatlı kaşığı","Üzüm pekmezi (tepsi tabanı için)"],[1.5,"su bardağı","Toz şeker ve 1.5 su bardağı su (şerbet)"],[0.5,"su bardağı","Toz Antep fıstığı"]],
+                steps: {
+                    prep: ["Şeker ve suyu 10 dakika kaynatıp limon damlatın ve ılımaya bırakın. Kadayıfları ince kıyıp eritilmiş tereyağıyla iyice harmanlayın."],
+                    cook: ["Künefe tepsisini tereyağı ve pekmezle yağlayın. Kadayıfın yarısını bastırarak yayın, üzerine peyniri koyun ve kalan kadayıfla kapatıp sıkıca bastırın.", "Ocak üzerinde tepsiyi çevirerek iki yüzünü de nar gibi kızartın."],
+                    serve: ["Ocaktan alır almaz ılık şerbeti gezdirin, üzerine bol fıstık serperek sıcak servis yapın."]
+                },
+                tips: "Künefe peynirinin uzaması için şerbetledikten sonra bekletmeden sıcak olarak servis etmelisiniz."
+            },
+            {
+                id: "hatay-humus", title: "Sıcak Tereyağlı & Pastırmalı Humus", region: "Akdeniz", city: "Hatay / Mersin", category: "Zeytinyağlı/Meze",
+                prep: "20 dk", cook: "10 dk", diff: "Kolay", cal: 360, srv: 4,
+                desc: "Kabukları soyulmuş nohut, tahin, kimyon ve limon suyunun kadifemsi ezmesi üzerine kızgın tereyağlı pastırma ve çam fıstığı.",
+                history: "Doğu Akdeniz'in binlerce yıllık meze kültüründe Hatay ve Tarsus humusu, soğuk mezelerin aksine üzerine kızgın yağlı pastırma dökülerek ılık servis edilmesiyle öne çıkar.",
+                ing: [[2,"su bardağı","Haşlanmış nohut (kabukları soyulmuş)"],[0.5,"su bardağı","Tahin"],[2,"diş","Sarımsak ve 1 adet limon suyu"],[1,"çay kaşığı","Kimyon ve tuz"],[4,"yemek kaşığı","Zeytinyağı ve 4 yemek kaşığı soğuk su"],[60,"gram","Pastırma ve 1 yemek kaşığı tereyağı (üzeri için)"]],
+                steps: {
+                    prep: ["Haşlanmış nohutların kabuklarını soyun; mutfak robotunda tahin, sarımsak, limon suyu, kimyon, zeytinyağı ve soğuk suyla pürüzsüz olana dek çekin."],
+                    cook: ["Küçük tavada tereyağını eritip doğranmış pastırmaları 1-2 dakika çıtırlaşana kadar çevirin."],
+                    serve: ["Humusu tabağa yayıp ortasını çukurlaştırın, üzerine sıcak pastırmalı tereyağı ve sumak gezdirerek servis edin."]
+                },
+                tips: "Humusun ipeksi bir kıvam alması için nohutların kabuklarını mutlaka soyun ve robota buzlu soğuk su ekleyin."
+            },
+            {
+                id: "antalya-piyaz-kofte", title: "Antalya Şiş Köfte & Tahinli Piyaz", region: "Akdeniz", city: "Antalya", category: "Ana Yemek",
+                prep: "25 dk", cook: "15 dk", diff: "Kolay", cal: 550, srv: 4,
+                desc: "Közde pişen sulu şiş köftelerin ayrılmaz ikilisi; tahin, sirke, limon ve haşlanmış yumurta ile hazırlanan meşhur Antalya piyazı.",
+                history: "Türkiye'nin diğer bölgelerinde salata olan piyaz, Antalya'da yoğun tahin sosu sayesinde tek başına bir ana yemek statüsündedir ve şiş köfteyle ayrılmaz bir ikili oluşturur.",
+                ing: [[500,"gram","Kuzu-dana karışık kıyma (şiş köfte için)"],[2,"su bardağı","Haşlanmış küçük kuru fasulye"],[0.5,"su bardağı","Tahin"],[3,"yemek kaşığı","Üzüm sirkesi ve 1 adet limon suyu"],[2,"diş","Ezilmiş sarımsak ve 3 yemek kaşığı zeytinyağı"],[2,"adet","Haşlanmış yumurta, 1 domates ve maydanoz"]],
+                steps: {
+                    prep: ["Kıymayı tuz ve kimyonla yoğurup şişlere geçirin. Piyaz sosu için tahin, sirke, limon suyu, sarımsak ve biraz haşlama suyunu boza kıvamında çırpın."],
+                    cook: ["Şiş köfteleri ızgara veya döküm tavada sulu kalacak şekilde 10-12 dakika pişirin."],
+                    serve: ["Haşlanmış fasulyeleri tahin sosuyla harmanlayıp tabağa alın, üzerine dilimlenmiş yumurta, domates ve maydanoz koyarak sıcak şiş köfteyle sunun."]
+                },
+                tips: "Tahin sosunu açarken sıradan su yerine fasulyenin ılık haşlama suyunu kullanmak sosun fasulyeye mükemmel tutunmasını sağlar."
+            },
+            {
+                id: "fellah-koftesi", title: "Sarımsaklı Fellah Köftesi", region: "Akdeniz", city: "Adana / Mersin", category: "Ana Yemek",
+                prep: "35 dk", cook: "20 dk", diff: "Orta", cal: 370, srv: 4,
+                desc: "İnce bulgur ve irmiğin yoğrulup düğme şeklinde çukurlaştırıldığı, bol sarımsaklı, domates soslu ve maydanozlu Akdeniz klasiği.",
+                history: "Çukurova mutfağının en sevilen etsiz köfte tarifidir. Ortasına parmakla basılarak yapılan çukur, bol sarımsaklı domates sosunun köftenin içine dolmasını sağlar.",
+                ing: [[1.5,"su bardağı","İnce köftelik bulgur"],[0.5,"su bardağı","İrmik"],[1.5,"su bardağı","Kaynar su"],[1,"yemek kaşığı","Biber salçası ve 2 yemek kaşığı un"],[3,"adet","Rendelenmiş domates (sosu için)"],[4,"diş","Ezilmiş sarımsak ve 4 yemek kaşığı zeytinyağı"],[0.5,"demet","İnce kıyılmış maydanoz"]],
+                steps: {
+                    prep: ["Bulgur ve irmiği kaynar suyla ıslatıp 15 dakika demlendirin. Salça, un, kimyon ve tuz ekleyip macun gibi yoğurun.", "Fındık büyüklüğünde yuvarlayıp ortalarına serçe parmağınızla bastırarak çukur açın."],
+                    cook: ["Köfteleri kaynar tuzlu suda 10-12 dakika haşlayıp süzün.", "Tavada zeytinyağı, sarımsak, rendelenmiş domates ve salçayı pişirip haşlanmış köfteleri sosa ekleyin."],
+                    serve: ["Üzerine bol ince kıyılmış maydanoz serperek sıcak servis yapın."]
+                },
+                tips: "Hamuru yoğururken elinizi ara ara ıslatmak köftelerin haşlanırken dağılmamasını garantiler."
+            },
+            {
+                id: "hatay-tepsi-kebabi", title: "Antakya Tepsi Kebabı", region: "Akdeniz", city: "Hatay", category: "Ana Yemek",
+                prep: "25 dk", cook: "30 dk", diff: "Kolay", cal: 580, srv: 4,
+                desc: "Zırhta çekilmiş kuzu-dana etinin sarımsak, maydanoz ve kapya biberle harmanlanıp salçalı suyla fırınlandığı Hatay klasiği.",
+                history: "Hatay'da kasapların hazırlayıp mahalle taş fırınlarına gönderdiği tepsi kebabı, etin kendi suyunu salçalı sosla birleştirmesiyle ekmek banmalık bir lezzet sunar.",
+                ing: [[600,"gram","Orta yağlı kuzu-dana kıyma"],[1,"adet","Kapya biber ve 2 adet yeşil biber (ince kıyılmış)"],[3,"diş","Sarımsak ve yarım demet maydanoz"],[1,"yemek kaşığı","Biber salçası ve 1 çay bardağı su (sos için)"],[2,"adet","Domates (dilimlenmiş)"],[1,"çay kaşığı","Karabiber, pul biber ve tuz"]],
+                steps: {
+                    prep: ["Kıyma, ince kıyılmış biberler, sarımsak, maydanoz ve baharatları iyice yoğurun."],
+                    cook: ["Harcı yuvarlak fırın tepsisine elinizle bastırarak eşit kalınlıkta yayın. Üzerine domates ve biber dilimleri dizin.", "Biber salçasını 1 çay bardağı suyla ezip üzerine gezdirin, 200 derece fırında 25-30 dakika pişirin."],
+                    serve: ["Dilimleyip sıcak lavaş ve ayran eşliğinde servis yapın."]
+                },
+                tips: "Etin pişerken küçülüp sertleşmemesi için tepsiye yayarken kenarlara kadar iyice bastırın ve yağlı kıyma tercih edin."
+            },
+            {
+                id: "anali-kizli", title: "Analı Kızlı Çorbası", region: "Akdeniz", city: "Adana / Kahramanmaraş", category: "Çorba",
+                prep: "50 dk", cook: "35 dk", diff: "Ustalık İster", cal: 430, srv: 6,
+                desc: "İçi kıymalı cevizli minik içli köfteler ('analar') ile nohut büyüklüğündeki bulgur köftelerinin ('kızlar') ekşili et suyunda buluşması.",
+                history: "Çukurova ve Maraş yöresinin en zahmetli ve saygın davet yemeğidir. Büyük dolgulu köfteler 'ana', küçük sade köfteler 'kız' olarak adlandırılır.",
+                ing: [[2,"su bardağı","İnce köftelik bulgur"],[250,"gram","Dana kıyma (yarısı hamura, yarısı iç harca)"],[1,"su bardağı","Haşlanmış nohut"],[1,"adet","Kuru soğan ve yarım su bardağı ceviz içi"],[1.5,"yemek kaşığı","Domates-biber salçası ve 2 yemek kaşığı tereyağı"],[1,"adet","Limon suyu, kuru nane ve 6 su bardağı et suyu"]],
+                steps: {
+                    prep: ["Kıymanın yarısını soğan, ceviz ve baharatlarla kavurup soğutun. Bulgur ve kalan çiğ kıymayı yoğurup hamur hazırlayın.", "Hamurun yarısından misket büyüklüğünde içli köfteler ('analar'), kalanından nohut kadar minik köfteler ('kızlar') yuvarlayın."],
+                    cook: ["Tencerede tereyağı ve salçayı kavurup sıcak et suyunu ekleyin. Kaynayınca nohutları ve köfteleri suya bırakın.", "Köfteler su yüzüne çıkıp pişince limon suyu ve kuru nane ekleyip 5 dakika daha kaynatın."],
+                    serve: ["Kaselere paylaştırıp sıcak olarak servis yapın."]
+                },
+                tips: "Analı köftelerin kabuğunu olabildiğince ince açmak ve iç harcın donmuş soğuk olması dağılmayı önler."
+            },
+            {
+                id: "antalya-hibes", title: "Antalya Usulü Hibeş", region: "Akdeniz", city: "Antalya", category: "Zeytinyağlı/Meze",
+                prep: "10 dk", cook: "0 dk", diff: "Kolay", cal: 310, srv: 4,
+                desc: "Tahin, limon suyu, sarımsak, kimyon ve kırmızı toz biberin çırpılmasıyla 10 dakikada hazırlanan pişmeyen Antalya mezesi.",
+                history: "Antalya mutfağının en pratik ve karakteristik mezesidir. Kahvaltıdan et yemeklerinin yanına kadar geniş bir kullanım alanına sahiptir.",
+                ing: [[1,"su bardağı","Tahin"],[0.5,"su bardağı","Taze sıkılmış limon suyu"],[3,"diş","Ezilmiş sarımsak"],[1.5,"tatlı kaşığı","Kimyon ve 1 tatlı kaşığı kırmızı toz biber"],[0.5,"su bardağı","Ilık su"],[2,"yemek kaşığı","Zeytinyağı (üzeri için)"]],
+                steps: {
+                    prep: ["Derin kasede tahin ve limon suyunu çırpın (önce koyulaşacaktır).", "Ilık suyu azar azar ekleyip kremamsı kıvama gelene dek çırpmaya devam edin.", "Ezilmiş sarımsak, kimyon, kırmızı toz biber ve tuzu ekleyip homojen olana dek karıştırın."],
+                    cook: ["Pişirme gerektirmez; buzdolabında 15 dakika dinlendirilmesi aromaların oturmasını sağlar."],
+                    serve: ["Servis tabağına yayıp üzerine zeytinyağı ve toz biber gezdirin, kızarmış ekmekle servis edin."]
+                },
+                tips: "Limon suyu tahini anında katılaştırır; panik yapmadan ılık suyu kaşık kaşık ekleyerek çırpmaya devam ederseniz pürüzsüz krema kıvamı alacaktır."
+            },
+            {
+                id: "mersin-kerebici", title: "Mersin Kerebiç Tatlısı", region: "Akdeniz", city: "Mersin / Tarsus", category: "Tatlı",
+                prep: "40 dk", cook: "25 dk", diff: "Orta", cal: 440, srv: 6,
+                desc: "İrmikli kıyır hamur içinde fıstık veya ceviz dolgusu, üzerinde çöven otundan yapılan kar beyazı özel köpüğüyle Mersin tatlısı.",
+                history: "Mersin ve Tarsus'un ramazan ve bayram geleneği olan kerebiç, şerbet yerine 'çöven köpüğü' ile servis edilmesiyle Türk tatlıları arasında tek örnektir.",
+                ing: [[125,"gram","Tereyağı (oda sıcaklığında)"],[1,"su bardağı","İrmik ve 2 su bardağı un"],[0.5,"su bardağı","Sıvı yağ ve 1 adet yumurta"],[1,"su bardağı","İri çekilmiş Antep fıstığı veya ceviz (iç harç)"],[1,"tatlı kaşığı","Tarçın ve mahlep"],[1,"kase","Krem şanti veya geleneksel çöven köpüğü (üzeri için)"]],
+                steps: {
+                    prep: ["Hamur malzemelerini yoğurup yumuşak bir hamur elde edin. İç harç için fıstık, 2 kaşık pudra şekeri ve tarçını karıştırın.", "Hamurdan ceviz büyüklüğünde parçalar alıp içli köfte gibi açın, fıstıklı harcı doldurup oval kapatın."],
+                    cook: ["180 derece önceden ısıtılmış fırında üzerleri beyaz kalacak şekilde (altları hafif pembeleşene dek) 20-25 dakika pişirin."],
+                    serve: ["Soğuyan kerebiçlerin üzerine bolca çöven köpüğü (veya çırpılmış krema) ve tarçın serperek servis edin."]
+                },
+                tips: "Kerebiç kurabiyeleri fırında kızartılmaz; beyaz ve kıyır kalması için 25 dakikayı aşmadan fırından çıkarılmalıdır."
+            },
+
+            // ================= 5. MARMARA BÖLGESİ (10 YEMEK) =================
+            {
+                id: "bursa-iskender", title: "Bursa İskender Kebabı", region: "Marmara", city: "Bursa", category: "Ana Yemek",
+                prep: "30 dk", cook: "25 dk", diff: "Orta", cal: 680, srv: 4,
+                desc: "Kızarmış tırnak pide küpleri üzerinde ince yaprak döner, özel domates sosu, süzme yoğurt ve cızırdayan kızgın tereyağı.",
+                history: "1867 yılında Bursa Kayhan Çarşısı'nda İskender Efendi'nin dikey şiş sistemini icat etmesiyle doğan, Türk gastronomisinin dünyaca ünlü başyapıtıdır.",
+                ing: [[500,"gram","İnce yaprak kesilmiş dana-kuzu döner eti"],[2,"adet","Tırnak pide (küp doğranmış)"],[3,"yemek kaşığı","Tereyağı"],[2,"yemek kaşığı","Domates salçası ve 2 rendelenmiş domates"],[1,"kase","Katı kıvamlı süzme yoğurt"],[4,"adet","Yeşil sivri biber ve 2 domates (közlemek için)"]],
+                steps: {
+                    prep: ["Tırnak pideleri küp doğrayın. Domates ve salçayı 1 kaşık tereyağı ve yarım bardak sıcak suyla kaynatıp sos hazırlayın."],
+                    cook: ["Pideleri tavada tereyağıyla hafif çıtırlaştırıp tabağa yayın. Yaprak etleri döküm tavada yüksek ateşte hızlıca pişirin.", "Pidelerin üzerine sos, et ve tekrar sos gezdirin."],
+                    serve: ["Tabağın kenarına süzme yoğurt ve köz sebzeleri koyun; en son kızdırılmış köpüklü tereyağını etlerin üzerine cızırdatarak dökün."]
+                },
+                tips: "Evde yaprak döner dokusu için dana antrikotu dondurucuda 1.5 saat bekletip yarı donukken kağıt inceliğinde dilimleyin."
+            },
+            {
+                id: "edirne-tava-ciger", title: "Edirne Tava Ciğeri", region: "Marmara", city: "Edirne", category: "Ana Yemek",
+                prep: "30 dk", cook: "10 dk", diff: "Orta", cal: 460, srv: 4,
+                desc: "Zarı ve sinirleri ayıklanmış yaprak inceliğindeki dana ciğerinin unlanıp kızgın yağda 1 dakikada pişirildiği Edirne efsanesi.",
+                history: "Edirne'nin coğrafi işaretli yemeği olan tava ciğeri, yanında kızartılmış kurutulmuş Karaağaç acı biberi ile servis edilmesiyle ünlüdür.",
+                ing: [[500,"gram","Dana ciğeri (zarı alınmış, yaprak inceliğinde dilimlenmiş)"],[1,"su bardağı","Buğday unu"],[1,"çay kaşığı","Tuz ve yarım çay kaşığı karbonat"],[2,"su bardağı","Ayçiçek yağı (kızartmak için)"],[10,"adet","Kurutulmuş kırmızı acı biber (kızartmak için)"]],
+                steps: {
+                    prep: ["Yaprak doğranmış ciğerleri yıkayıp süzgeçte kanı tamamen süzülene dek bekletin, tuzlayın."],
+                    cook: ["Derin tavada yağı iyice kızdırın. Ciğerleri unlayıp kevgirle fazla ununu silkeleyin ve kızgın yağa atın.", "Ciğerleri kurutmadan yalnızca 60-90 saniye kızartıp hemen kağıt havluya alın. Kuru acı biberleri de yağda 10 saniye çevirin."],
+                    serve: ["Kızarmış kuru acı biberler, sumaklı soğan salatası ve domates dilimleriyle sıcak servis yapın."]
+                },
+                tips: "Ciğerin sertleşmemesi için yağın çok kızgın olması ve pişirme süresinin 1.5 dakikayı geçmemesi şarttır."
+            },
+            {
+                id: "tekirdag-koftesi", title: "Tekirdağ Köftesi", region: "Marmara", city: "Tekirdağ", category: "Ana Yemek",
+                prep: "25 dk", cook: "15 dk", diff: "Kolay", cal: 510, srv: 4,
+                desc: "Dana kaburga eti, irmik, sarımsak ve kimyonun yoğrulup dinlendirilmesiyle hazırlanan elastik ve sulu Trakya köftesi.",
+                history: "20. yüzyıl başında Selanik göçmenlerinin Tekirdağ'a taşıdığı bu tarif, içine katılan az miktardaki irmik sayesinde yaylanan eşsiz bir dokuya sahiptir.",
+                ing: [[600,"gram","Dana döş-kaburga kıyma"],[2,"yemek kaşığı","İrmik ve 3 yemek kaşığı galeta unu"],[1,"adet","Rendelenmiş soğan ve 2 diş sarımsak"],[1.5,"çay kaşığı","Kimyon ve tuz"],[3,"yemek kaşığı","Acı kırmızı biber sosu (servis için)"]],
+                steps: {
+                    prep: ["Tüm köfte malzemelerini 10 dakika yoğurun, üzerini kapatıp buzdolabında en az 4 saat dinlendirin.", "Harçtan parmak şeklinde uzun köfteler yuvarlayın."],
+                    cook: ["Isıtılmış ızgara veya döküm tavada köfteleri çevirerek 10-12 dakika sulu kalacak şekilde pişirin."],
+                    serve: ["Yanında piyaz, köz biber ve özel acı biber sosu eşliğinde sıcak servis yapın."]
+                },
+                tips: "Tekirdağ köftesinin elastik dokusunu yakalamak için hamuru mutlaka buzdolabında dinlendirip irmiklerin şişmesini bekleyin."
+            },
+            {
+                id: "inegol-kofte", title: "Bursa İnegöl Köfte", region: "Marmara", city: "Bursa / İnegöl", category: "Ana Yemek",
+                prep: "25 dk", cook: "15 dk", diff: "Kolay", cal: 490, srv: 4,
+                desc: "Baharat kullanılmadan kuzu ve dana etinin karbonatla yoğrulup bir gece dinlendirilmesiyle hazırlanan meşhur İnegöl köftesi.",
+                history: "1893 yılında Bulgaristan Pazarcık'tan İnegöl'e göç eden Mustafa Efendi tarafından geliştirilen bu tarif, baharatsız saf et lezzetinin öncüsüdür.",
+                ing: [[450,"gram","Dana döş kıyma ve 150 gram kuzu kıyma"],[1,"adet","Kuru soğan (suyu sıkılmış rendelenmiş)"],[1,"çay kaşığı","Karbonat ve 1.5 çay kaşığı tuz"],[1,"tatlı kaşığı","Limon suyu (karbonatı aktifleştirmek için)"]],
+                steps: {
+                    prep: ["Kıymaları, soğanı, tuzu ve limon suyuyla köpürtülen karbonatı 10 dakika yoğurun; 1 gece buzdolabında dinlendirin.", "Ertesi gün tekrar 3 dakika yoğurup parmak şeklinde köfteler hazırlayın."],
+                    cook: ["Izgarada veya döküm tavada orta-yüksek ateşte 10 dakika çevirerek pişirin."],
+                    serve: ["Piyaz, közlenmiş domates-biber ve tırnak pide ile sıcak servis edin."]
+                },
+                tips: "Karbonatın üzerine birkaç damla limon suyu sıkarak harca katmak köftenin hem kabarmasını sağlar hem de karbonat tadını yok eder."
+            },
+            {
+                id: "islama-kofte", title: "Adapazarı Islama Köfte", region: "Marmara", city: "Sakarya / Adapazarı", category: "Ana Yemek",
+                prep: "30 dk", cook: "20 dk", diff: "Orta", cal: 570, srv: 4,
+                desc: "Kemik suyu ve tatlı kırmızı toz biberli sosa batırılıp ızgarada kızartılan bayat ekmek dilimleri üzerinde sunulan Sakarya klasiği.",
+                history: "20. yüzyıl başında Balkan göçmenlerinin bayat ekmekleri kemik suyuyla değerlendirme geleneğinden doğmuş, Adapazarı'nın simge yemeği olmuştur.",
+                ing: [[500,"gram","Dana-kuzu karışık kıyma"],[1,"adet","Rendelenmiş soğan ve yarım su bardağı bayat ekmek içi"],[8,"dilim","Bayat köy ekmeği"],[2,"su bardağı","Sıcak kemik suyu (ekmekleri ıslatmak için)"],[2,"yemek kaşığı","Tatlı kırmızı toz biber ve 3 yemek kaşığı sıvı yağ"]],
+                steps: {
+                    prep: ["Köfte malzemelerini yoğurup dinlendirin ve yassı köfteler şekillendirin.", "Derin tabakta sıcak kemik suyu, sıvı yağ ve kırmızı toz biberi çırparak kırmızı sosu hazırlayın."],
+                    cook: ["Bayat ekmek dilimlerini kırmızı kemik suyuna batırıp hemen ızgaraya alın; köftelerle birlikte arkalı önlü kızartın."],
+                    serve: ["Soslu kızarmış ekmek dilimlerinin üzerine sıcak köfteleri dizip piyazla servis edin."]
+                },
+                tips: "Ekmek dilimlerinin hamurlaşmaması için sosa yalnızca 1 saniye batırıp çıkarın ve hemen sıcak ızgaraya koyun."
+            },
+            {
+                id: "hunkar-begendi", title: "Saray Usulü Hünkar Beğendi", region: "Marmara", city: "İstanbul", category: "Ana Yemek",
+                prep: "35 dk", cook: "40 dk", diff: "Orta", cal: 560, srv: 4,
+                desc: "Odun ateşinde közlenmiş patlıcanların beşamel ve eski kaşarla buluştuğu yatak üzerinde lokum gibi pişmiş tas kebabı.",
+                history: "1869'da Sultan Abdülaziz'in Fransız İmparatoriçesi Eugénie onuruna verdiği ziyafette saray aşçılarınca yaratılan Osmanlı mutfağının başyapıtıdır.",
+                ing: [[500,"gram","Kuşbaşı kuzu veya dana eti"],[4,"adet","Büyük kemer patlıcan"],[2,"yemek kaşığı","Tereyağı ve 1.5 yemek kaşığı un"],[1.5,"su bardağı","Ilık süt"],[1,"su bardağı","Rendelenmiş eski kaşar peyniri"],[1,"adet","Soğan, 2 domates ve 1 yemek kaşığı salça"]],
+                steps: {
+                    prep: ["Patlıcanları közleyip kabuklarını soyun, limonlu suda 5 dakika bekletip incecik kıyın."],
+                    cook: ["Etleri soğan, salça ve domatesle yumuşayana dek tas kebabı şeklinde pişirin.", "Ayrı tavada tereyağı ile unu kavurun, köz patlıcanları ekleyip karıştırın; ılık sütü azar azar ekleyip eski kaşarla bağlayın."],
+                    serve: ["Tabağa sıcak beğendiyi yayın, ortasına soslu etleri yerleştirip maydanozla süsleyin."]
+                },
+                tips: "Patlıcanları soyduktan sonra limonlu suya batırmak beğendinin kararmadan bembeyaz ipeksi renkte kalmasını sağlar."
+            },
+            {
+                id: "kemalpasa-tatlisi", title: "Mustafakemalpaşa Peynir Tatlısı", region: "Marmara", city: "Bursa", category: "Tatlı",
+                prep: "25 dk", cook: "35 dk", diff: "Kolay", cal: 430, srv: 6,
+                desc: "Tuzsuz taze peynirle hazırlanan puf hamurların fırınlanıp şerbetle kaynatıldığı, kaymakla sunulan Bursa tatlısı.",
+                history: "Bursa'nın Mustafakemalpaşa ilçesinde mandıra kültürünün ürünü olarak doğan bu tatlı, taze lor/peynir içeriğiyle hafif ve süngerimsi bir dokuya sahiptir.",
+                ing: [[250,"gram","Tuzsuz taze peynir veya lor peyniri"],[1,"adet","Yumurta ve 2 yemek kaşığı tereyağı"],[1.5,"su bardağı","Un ve yarım su bardağı irmik"],[1,"paket","Kabartma tozu"],[3,"su bardağı","Toz şeker ve 3.5 su bardağı su (şerbet)"],[1,"kase","Manda kaymağı (servis için)"]],
+                steps: {
+                    prep: ["Peynir, yumurta, tereyağı, irmik, un ve kabartma tozunu yoğurup ceviz büyüklüğünde yuvarlayın."],
+                    cook: ["180 derece fırında 25 dakika kızartın. Tencerede şeker ve suyu kaynatıp fırından çıkan tatlıları kaynayan şerbetin içine atın ve 10 dakika şişene dek kaynatın."],
+                    serve: ["Şerbetini çeken tatlıları soğutup üzerine kaymak ve fıstık koyarak servis edin."]
+                },
+                tips: "Tatlıların içlerinin sert kalmaması için fırınlandıktan sonra mutlaka kaynayan şerbetin içinde 8-10 dakika pişirilmeleri gerekir."
+            },
+            {
+                id: "peynir-helvasi", title: "Fırınlanmış Çanakkale Peynir Helvası", region: "Marmara", city: "Çanakkale", category: "Tatlı",
+                prep: "15 dk", cook: "25 dk", diff: "Kolay", cal: 450, srv: 4,
+                desc: "Taze tuzsuz koyun peyniri, irmik ve şekerin tel tel uzayan kıvamda pişirilip üzerinin fırında kızartıldığı Çanakkale tatlısı.",
+                history: "Çanakkale'nin Ezine ve Bayramiç mandıralarından gelen taze peynirlerle yapılan bu helva, sıcakken peynir gibi uzayan eşsiz bir dokuya sahiptir.",
+                ing: [[350,"gram","Tuzsuz taze peynir (rendelenmiş)"],[1,"su bardağı","İrmik"],[1.5,"su bardağı","Toz şeker"],[1,"adet","Yumurta sarısı"],[2,"yemek kaşığı","Tereyağı"],[1,"su bardağı","Su"]],
+                steps: {
+                    prep: ["Tuzsuz taze peyniri rendeleyin veya elinizle iyice ufalayın."],
+                    cook: ["Tencerede tereyağı ile irmiği hafif kavurun, su ve şekeri ekleyip çekmesini bekleyin. Peyniri ve yumurta sarısını ekleyip kısık ateşte peynir eriyip uzayana dek karıştırın."],
+                    serve: ["Güveç kaplarına paylaştırıp 200 derece fırının üst ızgarasında 8 dakika kızartın, sıcak servis edin."]
+                },
+                tips: "Kullanacağınız peynirin kesinlikle tuzsuz ve taze olması gerekir; aksi halde helva uzamaz ve tuzlu olur."
+            },
+            {
+                id: "kestane-sekeri", title: "Ev Yapımı Bursa Kestane Şekeri", region: "Marmara", city: "Bursa", category: "Tatlı",
+                prep: "30 dk", cook: "45 dk", diff: "Orta", cal: 320, srv: 6,
+                desc: "Uludağ'ın iri kestanelerinin dağılmadan haşlanıp vanilyalı koyu şerbet içinde ağır ağır şekerlenmesiyle hazırlanan Bursa simgesi.",
+                history: "Uludağ eteklerinde yetişen kestanelerin saray mutfağı için şerbetlenmesiyle doğan kestane şekeri, Bursa'nın en ünlü hediyelik gastronomi değeridir.",
+                ing: [[500,"gram","İri boy kestane"],[2.5,"su bardağı","Toz şeker"],[2.5,"su bardağı","Su"],[1,"çubuk","Vanilya veya 1 paket vanilin"]],
+                steps: {
+                    prep: ["Kestanelerin bombeli kısmına çizik atıp kaynar suda 15 dakika haşlayın ve sıcakken dış ile iç tüylü kabuklarını bütün halde soyun."],
+                    cook: ["Geniş tencerede şeker, su ve vanilyayı 10 dakika kaynatın. Soyulmuş kestaneleri şerbete bırakıp en kısık ateşte 30 dakika ağır ağır pişirin."],
+                    serve: ["Şerbetin içinde 1 gece dinlendirdikten sonra süzerek servis edin."]
+                },
+                tips: "Kestanelerin iç kabuğunun kolay soyulması için haşlama suyundan tek tek çıkarıp sıcakken soyun; soğursa kabuk yapışır."
+            },
+            {
+                id: "karniyarik", title: "Geleneksel Karnıyarık", region: "Marmara", city: "İstanbul / Marmara", category: "Ana Yemek",
+                prep: "30 dk", cook: "35 dk", diff: "Orta", cal: 430, srv: 4,
+                desc: "Alacalı soyulmuş kemer patlıcanların ortasına doldurulan bol soğanlı, sarımsaklı ve maydanozlu kıymalı harç ile yaz sofralarının baş tacı.",
+                history: "Türk ev mutfağının en sevilen patlıcan yemeği olan karnıyarık, yanında pirinç pilavı ve cacıkla kusursuz bir üçlü oluşturur.",
+                ing: [[6,"adet","Orta boy kemer patlıcan"],[300,"gram","Orta yağlı dana kıyma"],[2,"adet","Kuru soğan ve 3 diş sarımsak"],[2,"adet","Yeşil sivri biber ve 2 adet domates"],[0.5,"demet","Maydanoz"],[1,"yemek kaşığı","Domates salçası ve 1 su bardağı sıcak su"]],
+                steps: {
+                    prep: ["Patlıcanları alacalı soyup tuzlu suda 20 dakika bekletin, kurulayıp yağlayın ve 200 derece fırında 20 dakika yumuşatın.", "Kıymayı soğan, sarımsak, biber, domates ve maydanozla kavurup iç harcı hazırlayın."],
+                    cook: ["Patlıcanları tepsiye dizip ortalarını yarın, iç harcı doldurun. Salçalı sıcak suyu tepsiye döküp 190 derece fırında 20 dakika pişirin."],
+                    serve: ["Pirinç pilavı ve buz gibi cacık eşliğinde sıcak servis yapın."]
+                },
+                tips: "Patlıcanları kızartmak yerine yağlayıp fırında ön pişirme yapmak yemeği çok daha hafif yapar."
+            },
+
+            // ================= 6. DOĞU ANADOLU BÖLGESİ (10 YEMEK) =================
+            {
+                id: "erzurum-cag-kebabi", title: "Erzurum Cağ Kebabı", region: "Doğu Anadolu", city: "Erzurum / Oltu", category: "Ana Yemek",
+                prep: "40 dk", cook: "25 dk", diff: "Ustalık İster", cal: 620, srv: 4,
+                desc: "Soğan, reyhan ve karabiberle marine edilen yağlı kuzu etinin yatay şişte pişirilip küçük cağ şişlerine kesilerek sunulduğu Erzurum efsanesi.",
+                history: "Erzurum'un Oltu ve Tortum ilçelerinde doğan cağ kebabı, yatay odun ateşinde pişen etin küçük şişlere ('cağ') takılarak kesilmesiyle adını almıştır.",
+                ing: [[700,"gram","Yağlı kuzu but veya sırt eti (yaprak dilimlenmiş)"],[2,"adet","Kuru soğan (rendelenmiş)"],[1,"kase","Yoğurt (marinasyon için)"],[1,"tatlı kaşığı","Taze çekilmiş karabiber, reyhan ve tuz"],[4,"adet","Lavaş, sumaklı soğan ve köz biber"]],
+                steps: {
+                    prep: ["Yoğurt, rendelenmiş soğan suyu, karabiber ve tuzu karıştırın; yaprak kuzu etlerini bu sosta buzdolabında 1 gece dinlendirin.", "Etleri metal şişlere sıkıca dizin."],
+                    cook: ["Yüksek ısıtılmış ızgara veya döküm tavada etlerin dışını mühürleyip dilimleyerek küçük şişlere geçirin ve her yüzünü 3-4 dakika pişirin."],
+                    serve: ["Sıcak lavaş üzerinde sumaklı soğan, domates ve acı biberle servis yapın."]
+                },
+                tips: "Cağ kebabının yumuşacık olması için sinirlerinden arındırılmış kuzu eti kullanın ve yoğurt-soğan marinasyonunu atlamayın."
+            },
+            {
+                id: "kadayif-dolmasi", title: "Erzurum Kadayıf Dolması", region: "Doğu Anadolu", city: "Erzurum", category: "Tatlı",
+                prep: "30 dk", cook: "15 dk", diff: "Orta", cal: 490, srv: 6,
+                desc: "Tel kadayıfın içine bol ceviz konulup sarma gibi sarıldığı, yumurtaya bulanıp kızartılarak soğuk şerbete atıldığı çıtır Erzurum tatlısı.",
+                history: "Erzurum'da özellikle Ramazan iftarlarının vazgeçilmezi olan kadayıf dolması, yumurtaya bulanarak kızartılması sayesinde şerbeti çekse bile çıtırlığını korur.",
+                ing: [[300,"gram","Taze tel kadayıf"],[1.5,"su bardağı","İri çekilmiş ceviz içi"],[3,"adet","Yumurta (çırpılmış)"],[2,"su bardağı","Ayçiçek yağı (kızartmak için)"],[2.5,"su bardağı","Toz şeker ve 2 su bardağı su (şerbet)"]],
+                steps: {
+                    prep: ["Şeker ve suyu 15 dakika kaynatıp tamamen soğutun. Tel kadayıftan avuç içi kadar parçalar koparıp içine ceviz koyun ve sarma gibi sıkıca sarın."],
+                    cook: ["Sardığınız dolmaları çırpılmış yumurtaya bulayıp fazla yumurtasını süzün ve kızgın yağda nar gibi kızartın.", "Kızaran sıcak dolmaları doğrudan buz gibi soğuk şerbetin içine atın."],
+                    serve: ["Şerbette 2 dakika bekletip servis tabağına alın, üzerine ceviz veya kaymak koyarak servis edin."]
+                },
+                tips: "Yumurta kokusu olmaması için yumurtaları iyice çırpın ve kızartma yağının tamamen kızgın olduğundan emin olun."
+            },
+            {
+                id: "van-murtuga", title: "Van Kahvaltısı Klasiği: Murtuğa", region: "Doğu Anadolu", city: "Van", category: "Hamur İşi",
+                prep: "10 dk", cook: "15 dk", diff: "Kolay", cal: 470, srv: 4,
+                desc: "Yayla tereyağında rengi dönene dek kavrulan unun çırpılmış yumurtayla buluştuğu, bal veya pekmezle sunulan meşhur Van lezzeti.",
+                history: "Dünyaca ünlü Van Kahvaltı Sofrası'nın en köklü sıcak lezzetlerinden biri olan murtuğa, hem tuzlu hem de üzerine bal gezdirilerek tatlı olarak tüketilir.",
+                ing: [[3,"yemek kaşığı","Tereyağı"],[4,"yemek kaşığı","Un"],[3,"adet","Yumurta"],[0.5,"çay kaşığı","Tuz"],[2,"yemek kaşığı","Süzme çiçek balı veya ceviz (servis için)"]],
+                steps: {
+                    prep: ["Yumurtaları bir kasede tuz ile iyice çırpın."],
+                    cook: ["Tavada tereyağını eritin, unu ekleyip kısık ateşte sürekli karıştırarak kokusu çıkana ve rengi hafif pembeleşene dek 6-7 dakika kavurun.", "Kavrulan una çırpılmış yumurtaları döküp hızlıca karıştırarak yumurtalar pişene dek 3 dakika daha ocakta tutun."],
+                    serve: ["Sıcak tabağa alın, isteğe göre üzerine bal ve ceviz gezdirerek lavaşla servis edin."]
+                },
+                tips: "Unu yakmadan sabırla kısık ateşte kavurmak murtuğanın fındıksı aromasını ortaya çıkarır."
+            },
+            {
+                id: "harput-koftesi", title: "Elazığ Harput Köftesi", region: "Doğu Anadolu", city: "Elazığ", category: "Ana Yemek",
+                prep: "35 dk", cook: "25 dk", diff: "Orta", cal: 410, srv: 4,
+                desc: "Yağsız dana kıyma, ince bulgur ve taze reyhanla yoğrulan misket köftelerin salçalı tereyağlı sos içinde piştiği Elazığ klasiği.",
+                history: "Tarihi Harput kalesinden adını alan bu köfte, iç harcındaki kurutulmuş mor reyhan aromasıyla Doğu Anadolu mutfağının en sevilen yemeklerindendir.",
+                ing: [[300,"gram","Yağsız dana kıyma"],[1.5,"su bardağı","İnce köftelik bulgur"],[1,"adet","Kuru soğan (ince doğranmış)"],[1,"yemek kaşığı","Kuru reyhan ve yarım demet maydanoz"],[1.5,"yemek kaşığı","Domates-biber salçası ve 2 yemek kaşığı tereyağı"],[4,"su bardağı","Sıcak su"]],
+                steps: {
+                    prep: ["Kıyma, bulgur, ince doğranmış soğan, reyhan, maydanoz ve tuzu azar azar su ekleyerek sakız gibi olana dek yoğurun.", "Harçtan misket büyüklüğünde parçalar koparıp ortalarına hafifçe bastırarak yuvarlayın."],
+                    cook: ["Tencerede tereyağı ve salçayı kavurun, sıcak suyu ekleyip kaynatın. Kaynayan salçalı suya köfteleri atıp 20 dakika pişirin."],
+                    serve: ["Sulu sosuyla birlikte derin tabaklara alıp sıcak servis edin."]
+                },
+                tips: "Harput köftesinin olmazsa olmaz baharatı mor reyhandır; mutlaka bolca kullanın."
+            },
+            {
+                id: "ayran-asi-corbasi", title: "Doğu Anadolu Ayran Aşı Çorbası", region: "Doğu Anadolu", city: "Erzurum / Kars", category: "Çorba",
+                prep: "15 dk", cook: "30 dk", diff: "Kolay", cal: 260, srv: 6,
+                desc: "Aşurelik buğday, süzme yoğurt, yumurta ve yayla otu aşotunun (kişniş) muhteşem uyumuyla ister sıcak ister soğuk içilen şifa çorbası.",
+                history: "Doğu Anadolu yaylalarında yetişen taze kişniş ('aşotu') ile lezzetlendirilen ayran aşı, bölgenin hem yaz hem kış sofralarının baş tacıdır.",
+                ing: [[1,"su bardağı","Aşurelik buğday (haşlanmış)"],[2,"su bardağı","Süzme yoğurt"],[1,"adet","Yumurta ve 1 yemek kaşığı un"],[5,"su bardağı","Su"],[0.5,"demet","Taze kişniş (aşotu) veya dereotu"],[2,"yemek kaşığı","Tereyağı ve 1 tatlı kaşığı kuru nane"]],
+                steps: {
+                    prep: ["Tencerede yoğurt, yumurta ve unu pürüzsüz olana dek çırpın; suyu ekleyip ocağa alın."],
+                    cook: ["Çorba kaynayana dek sürekli karıştırın (kesilmemesi için). Kaynayınca haşlanmış buğdayı ekleyip 15 dakika kısık ateşte pişirin.", "Tuzunu ve ince kıyılmış taze kişnişi ekleyip ocaktan alın."],
+                    serve: ["Üzerine tereyağında yakılmış kuru nane gezdirerek sıcak servis yapın."]
+                },
+                tips: "Yoğurtlu çorbanın kesilmemesi için tuzu mutlaka çorba kaynayıp ocağı kapatmaya yakın ekleyin."
+            },
+            {
+                id: "kars-kaz-eti", title: "Kars Kaz Eti & Bulgur Pilavı", region: "Doğu Anadolu", city: "Kars / Ardahan", category: "Ana Yemek",
+                prep: "30 dk", cook: "90 dk", diff: "Ustalık İster", cal: 690, srv: 4,
+                desc: "Kars ayazında kurutularak olgunlaştırılan kaz etinin haşlanıp fırında kızartıldığı, kendi yağıyla pişen bulgur pilavıyla sunulan kış ziyafeti.",
+                history: "Kars ve Ardahan'da ilk kar yağdıktan sonra kesilip tuzlanarak ayazda kurutulan kaz eti, bölgenin en kıymetli kış geleneği ve misafir ikramıdır.",
+                ing: [[1,"kilogram","Parçalanmış kaz eti (veya yağlı ördek/hindi eti)"],[2,"su bardağı","İri pilavlık bulgur"],[1,"adet","Kuru soğan (ince doğranmış)"],[4,"su bardağı","Kazın kendi haşlama suyu"],[1,"çay kaşığı","Tuz ve karabiber"]],
+                steps: {
+                    prep: ["Tuzlanmış kaz etini 2 saat ılık suda bekletip fazla tuzunu alın."],
+                    cook: ["Kaz etlerini düdüklü veya derin tencerede üzerini geçecek suyla etler yumuşayana dek 1 saat haşlayın; yağlı suyunu ayırın.", "Haşlanan etleri fırın tepsisine alıp 200 derece fırında derisi çıtırlaşana dek 20 dakika kızartın.", "Ayrı tencerede soğanı kaz yağıyla kavurup bulguru ve sıcak kaz suyunu ekleyerek pilavı demleyin."],
+                    serve: ["Geniş siniye bulgur pilavını yayın, üzerine nar gibi kızarmış kaz etlerini yerleştirip turşuyla servis edin."]
+                },
+                tips: "Pilavı mutlaka kazın kendi yağlı haşlama suyuyla pişirmek yemeğin gerçek Kars lezzetini ortaya çıkarır."
+            },
+            {
+                id: "abdigor-koftesi", title: "Doğubayazıt Abdigör Köftesi", region: "Doğu Anadolu", city: "Ağrı / Doğubayazıt", category: "Ana Yemek",
+                prep: "45 dk", cook: "30 dk", diff: "Ustalık İster", cal: 440, srv: 4,
+                desc: "İshak Paşa Sarayı mutfağından miras; sinirsiz dana etinin taş üzerinde dövülerek macun haline getirilip suda haşlandığı diyet dostu köfte.",
+                history: "17. yüzyılda İshak Paşa Sarayı'nda mide rahatsızlığı olan Çolak Abdi Paşa için yağsız ve sinirsiz etin dövülerek hazırlanmasıyla icat edilmiştir.",
+                ing: [[600,"gram","Sinirsiz yağsız dana but eti (3 kez çekilmiş veya dövülmüş)"],[1,"adet","Rendelenmiş soğan"],[1,"adet","Yumurta ve 2 yemek kaşığı un"],[1.5,"çay kaşığı","Tuz ve karabiber"],[2,"su bardağı","Pirinç (yanında sade pilav için)"]],
+                steps: {
+                    prep: ["Sinirsiz dana etini rendelenmiş soğan, yumurta, un ve tuzla macun kıvamına gelene dek 15 dakika yoğurun.", "Elinizi ıslatarak portakal büyüklüğünde pürüzsüz yuvarlak köfteler yapın."],
+                    cook: ["Geniş tencerede kaynayan tuzlu suya köfteleri dikkatlice bırakın ve orta ateşte 25-30 dakika haşlayın."],
+                    serve: ["Suyundan süzerek aldığınız köfteleri tereyağlı pirinç pilavı üzerinde dilimleyerek servis edin."]
+                },
+                tips: "Abdigör köftesinin içinde hiç yağ ve sinir olmaması, haşlandığında sünger gibi yumuşak ve dağılmayan bir doku almasını sağlar."
+            },
+            {
+                id: "ciris-otu-kavurmasi", title: "Yumurtalı Çiriş Otu Kavurması", region: "Doğu Anadolu", city: "Erzurum / Tunceli", category: "Zeytinyağlı/Meze",
+                prep: "20 dk", cook: "15 dk", diff: "Kolay", cal: 280, srv: 4,
+                desc: "Baharda yüksek dağ eteklerinde yetişen yabani dağ pırasası çiriş otunun tereyağı, soğan ve yumurtayla kavrulduğu şifalı bahar yemeği.",
+                history: "Anadolu'da 'gülik' veya 'kirkiş' olarak da bilinen çiriş otu, bahar aylarında doğanın uyanışını simgeleyen yüksek vitaminli yabani bir lezzettir.",
+                ing: [[500,"gram","Taze çiriş otu"],[1,"adet","Kuru soğan (piyazlık doğranmış)"],[2,"yemek kaşığı","Tereyağı"],[3,"adet","Yumurta"],[1,"çay kaşığı","Pul biber ve tuz"]],
+                steps: {
+                    prep: ["Çiriş otlarını ayıklayıp bol suda yıkayın, 2-3 cm uzunluğunda doğrayın ve kaynar suda 5 dakika haşlayıp süzün."],
+                    cook: ["Tavada tereyağını eritip soğanları pembeleştirin. Haşlanmış çiriş otlarını ekleyip 5 dakika kavurun.", "Üzerine yumurtaları kırıp tuz ve pul biber ekleyin, yumurtalar pişene dek 3 dakika daha ocakta tutun."],
+                    serve: ["Yanında süzme yoğurt ve tandır ekmeği ile sıcak servis yapın."]
+                },
+                tips: "Çiriş otunu önceden 5 dakika haşlayıp suyunu sıkmak hem toprak kokusunu giderir hem de kavururken sulanmasını önler."
+            },
+            {
+                id: "su-boregi", title: "Erzurum Su Böreği", region: "Doğu Anadolu", city: "Erzurum / Kars", category: "Hamur İşi",
+                prep: "60 dk", cook: "35 dk", diff: "Ustalık İster", cal: 520, srv: 8,
+                desc: "Bol yumurtalı hamurun incecik açılıp kaynar suda haşlandığı, arasına göğermiş civil peynir ve tereyağı konulan emek işi börek.",
+                history: "Erzurum'da su böreğinin en belirgin farkı, iç harcında eriyen kaşar yerine tel tel ayrılan yöresel civil peynir ve göğermiş peynir kullanılmasıdır.",
+                ing: [[5,"adet","Yumurta"],[4.5,"su bardağı","Un ve 1 tatlı kaşığı tuz"],[200,"gram","Eritilmiş tereyağı"],[350,"gram","Tel civil peynir ve beyaz peynir karışımı"],[0.5,"demet","İnce kıyılmış maydanoz"]],
+                steps: {
+                    prep: ["Yumurta, tuz ve unu (su eklemeden) sert bir hamur yoğurun; 10 bezeye ayırıp dinlendirin ve incecik yufkalar açın."],
+                    cook: ["Geniş tencerede tuzlu suyu kaynatın. En alt ve en üst yufka hariç diğer 8 yufkayı kaynar suda 30 saniye haşlayıp soğuk suya alın ve süzün.", "Yağlanmış tepsiye her katın arasına tereyağı sürerek 5 kat yufkayı dizin; ortaya peynirli harcı yayın ve kalan 5 katı üzerine yerleştirin.", "190 derece fırında veya ocak üzerinde çevirerek 35 dakika nar gibi kızartın."],
+                    serve: ["Dilimleyip sıcak olarak çay eşliğinde servis yapın."]
+                },
+                tips: "Yufkaları haşladıktan sonra mutlaka buz gibi soğuk suya batırıp elinizle suyunu sıkın; bu işlem yufkaların birbirine yapışmasını önler."
+            },
+            {
+                id: "erzurum-kete", title: "İçli Erzurum Ketesi", region: "Doğu Anadolu", city: "Erzurum / Kars", category: "Hamur İşi",
+                prep: "45 dk", cook: "25 dk", diff: "Orta", cal: 460, srv: 6,
+                desc: "Mayalı yumuşak hamurun içine tereyağında kavrulmuş un ve ceviz konularak hazırlanan, günlerce bayatlamayan Doğu Anadolu çöreği.",
+                history: "Yolculuklarda ve kış aylarında uzun süre tazeliğini korumasıyla bilinen kete, kavrulmuş un iç harcıyla tok tutan geleneksel bir hamur işidir.",
+                ing: [[4.5,"su bardağı","Un"],[1,"su bardağı","Ilık süt ve yarım su bardağı ılık su"],[0.5,"su bardağı","Sıvı yağ ve 1 paket instant maya"],[1.5,"su bardağı","Un (iç harcı kavurmak için)"],[100,"gram","Tereyağı (iç harç için) ve yarım su bardağı ceviz"],[1,"adet","Yumurta sarısı (üzerine sürmek için)"]],
+                steps: {
+                    prep: ["Hamur malzemelerini yoğurup 35 dakika mayalandırın. Tavada tereyağını eritip 1.5 bardak unu pembeleşene dek kavurun ve soğutun."],
+                    cook: ["Bezeleri tabak büyüklüğünde açıp ortasına kavrulmuş un ve ceviz koyun, bohça gibi kapatıp hafifçe bastırın.", "Üzerine yumurta sarısı sürüp çatalla desen verin ve 190 derece fırında 25 dakika kızartın."],
+                    serve: ["Ilık veya soğuk olarak çay ve yöresel peynirlerle servis edin."]
+                },
+                tips: "İç harcındaki unu kavururken mutlaka kısık ateşte sabırla karıştırın; kokusu çıktığında ocağı kapatın."
+            },
+
+            // ================= 7. GÜNEYDOĞU ANADOLU BÖLGESİ (10 YEMEK) =================
+            {
+                id: "antep-baklavasi", title: "Gaziantep Fıstıklı Baklavası", region: "Güneydoğu Anadolu", city: "Gaziantep", category: "Tatlı",
+                prep: "60 dk", cook: "45 dk", diff: "Ustalık İster", cal: 580, srv: 8,
+                desc: "Kırk kat incecik yufka, köpüğü alınmış sade yağ, boz Antep fıstığı ve tam kıvamında şerbetiyle AB tescilli gastronomi şaheseri.",
+                history: "Avrupa Birliği tarafından tescillenen ilk Türk ürünü olan Gaziantep Baklavası, ustalık geleneği ve boz Antep fıstığıyla dünyanın en saygın tatlısıdır.",
+                ing: [[4,"su bardağı","Baklavalık un"],[2,"adet","Yumurta ve yarım su bardağı süt"],[0.5,"su bardağı","Sıvı yağ ve 1 yemek kaşığı üzüm sirkesi"],[250,"gram","Sade yağ (veya köpüğü alınmış tereyağı)"],[250,"gram","Çekilmiş boz Antep fıstığı"],[1.5,"su bardağı","Buğday nişastası (yufkaları açmak için)"],[3.5,"su bardağı","Toz şeker ve 3 su bardağı su (şerbet)"]],
+                steps: {
+                    prep: ["Şeker ve suyu 20 dakika kaynatıp limon suyu sıkın ve soğutun. Hamuru yoğurup 30 bezeye ayırın ve nişastayla incecik açın."],
+                    cook: ["Tepsiye 15 kat yufkayı serip arasına bol Antep fıstığı yayın, kalan 15 katı üzerine yerleştirip dilimleyin.", "Kızdırılmış sade yağı gezdirip 175 derece fırında 45 dakika altı üstü kızarana dek pişirin."],
+                    serve: ["Fırından çıkan sıcak baklavaya 2 dakika sonra soğuk şerbeti gezdirin, dinlendirip servis edin."]
+                },
+                tips: "Tereyağını erittikten sonra üzerindeki beyaz süt köpüğünü mutlaka süzün; bu köpükler fırında yanarak baklava üzerinde siyah lekeler yapar."
+            },
+            {
+                id: "ali-nazik-kebabi", title: "Gaziantep Ali Nazik Kebabı", region: "Güneydoğu Anadolu", city: "Gaziantep", category: "Ana Yemek",
+                prep: "30 dk", cook: "25 dk", diff: "Orta", cal: 530, srv: 4,
+                desc: "Közlenmiş patlıcan ve sarımsaklı süzme yoğurt yatağı üzerinde tereyağında sotelenmiş kuzu eti ve kırmızı toz biber sosu.",
+                history: "Rivayete göre Yavuz Sultan Selim'in Gaziantep seferi sırasında ikram edilen bu yemeği çok beğenip 'Hangi eli nazik yaptı bunu?' demesiyle 'Alinazik' adını almıştır.",
+                ing: [[500,"gram","Minik doğranmış kuzu kuşbaşı veya zırh kıyma"],[4,"adet","Büyük kemer patlıcan"],[1,"kase","Süzme yoğurt ve 2 diş sarımsak"],[2,"yemek kaşığı","Tereyağı ve 1 yemek kaşığı domates salçası"],[1,"tatlı kaşığı","Kırmızı toz biber ve tuz"]],
+                steps: {
+                    prep: ["Patlıcanları közleyip kabuklarını soyun, incecik kıyıp sarımsaklı süzme yoğurt ve tuzla karıştırın."],
+                    cook: ["Tavada tereyağı ile kuzu etlerini suyunu çekene dek kavurun, salça ve toz biberi ekleyip 3 dakika daha soteleyin."],
+                    serve: ["Tabağa sarımsaklı patlıcanlı yoğurdu yayın, üzerine sıcak tereyağlı etleri yerleştirip maydanozla süsleyin."]
+                },
+                tips: "Yoğurtlu patlıcan karışımının sulanmaması için süzme yoğurt kullanın ve sıcak eti tabağa servis anında koyun."
+            },
+            {
+                id: "beyran-corbasi", title: "Gaziantep Beyran Çorbası", region: "Güneydoğu Anadolu", city: "Gaziantep", category: "Çorba",
+                prep: "30 dk", cook: "90 dk", diff: "Ustalık İster", cal: 590, srv: 4,
+                desc: "12 saat ağır ateşte pişen kuzu gerdan eti, pirinç, sarımsak, iç yağı ve bol acı pul biberin harlı ateşte kaynatıldığı sabah şifası.",
+                history: "Gaziantep'te sabahın erken saatlerinde kahvaltı niyetine içilen beyran, yüksek kolajenli et suyu ve sarımsak-pul biber ikilisiyle doğal bir şifa kaynağıdır.",
+                ing: [[600,"gram","Kemikli kuzu gerdan eti"],[0.5,"su bardağı","Pirinç (haşlanmış)"],[5,"diş","Sarımsak (ezilmiş)"],[2,"yemek kaşığı","Tereyağı ve 1 tatlı kaşığı biber salçası"],[1,"yemek kaşığı","Acı pul biber ve karabiber"],[5,"su bardağı","Sıcak kuzu et suyu"]],
+                steps: {
+                    prep: ["Kuzu gerdan etini bol suyla kemiklerinden ayrılana dek haşlayın; etleri didikleyin ve suyunu süzün."],
+                    cook: ["Bakır sahan veya derin tavada tereyağı ve salçayı kızdırın; haşlanmış pirinç ve didiklenmiş etleri ekleyin.", "Ezilmiş sarımsak, bol pul biber ve sıcak et suyunu ilave edip yüksek ateşte 3-4 dakika harlı şekilde kaynatın."],
+                    serve: ["Kaynar halde sahanında limon dilimleri ve taze pide eşliğinde servis yapın."]
+                },
+                tips: "Beyranın gerçek lezzeti tüm malzemelerin harlı ateşte bir arada fokurdayarak sarımsak ve acı biber aromasını et suyuna geçirmesiyle oluşur."
+            },
+            {
+                id: "sanliurfa-cig-kofte", title: "Şanlıurfa Etsiz & İsotlu Çiğ Köfte", region: "Güneydoğu Anadolu", city: "Şanlıurfa", category: "Zeytinyağlı/Meze",
+                prep: "45 dk", cook: "0 dk", diff: "Ustalık İster", cal: 340, srv: 6,
+                desc: "İnce esmer bulgurun Şanlıurfa isotu, salça, sarımsak ve buz ile bilek gücüyle yoğrulduğu sıra gecelerinin vazgeçilmezi.",
+                history: "Tarihi Hz. İbrahim dönemine dayandırılan çiğ köfte, Şanlıurfa'nın güneşte kurutulan özel mor isotu ve uzun yoğurma tekniğiyle bulgurun pişmeden yumuşamasıyla yapılır.",
+                ing: [[3,"su bardağı","İnce esmer köftelik bulgur"],[1,"su bardağı","Şanlıurfa isotu (yarım bardak sıcak suyla ıslatılmış)"],[2,"yemek kaşığı","Biber salçası ve 1 yemek kaşığı domates salçası"],[1,"adet","Kuru soğan (ince rendelenmiş) ve 3 diş sarımsak"],[0.5,"su bardağı","Zeytinyağı ve 2 yemek kaşığı nar ekşisi"],[1,"kase","Buz küpleri (yoğurmak için) ve marul yaprakları"]],
+                steps: {
+                    prep: ["İsotu yarım bardak sıcak su ve zeytinyağıyla 15 dakika bekletip rengini ve aromasını açın."],
+                    cook: ["Geniş çiğ köfte tepsisinde bulgur, rendelenmiş soğan, sarımsak ve salçaları buz küpleri ekleyerek 30-35 dakika bulgurlar tamamen yumuşayana dek yoğurun.", "Islatılmış isotu, nar ekşisini, kimyonu ve tuzu ekleyip 10 dakika daha yoğurun."],
+                    serve: ["Elinizle sıkarak şekillendirin, taze marul yaprakları, nane ve limon dilimleriyle servis edin."]
+                },
+                tips: "Yoğurma sırasında su yerine buz küpleri kullanmak bulgurun şişip lapalaşmasını önler ve parlak bir kıvam verir."
+            },
+            {
+                id: "icli-kofte", title: "Kızartma & Haşlama İçli Köfte", region: "Güneydoğu Anadolu", city: "Gaziantep / Mardin", category: "Ana Yemek",
+                prep: "60 dk", cook: "20 dk", diff: "Ustalık İster", cal: 480, srv: 6,
+                desc: "İncecik açılan bulgur-irmik kabuğu içinde kavrulmuş soğanlı, cevizli ve baharatlı kıyma harcıyla ustalık eseri.",
+                history: "Mezopotamya mutfağının ortak hazinesi olan içli köfte, dış kabuğunun kağıt gibi ince açılması ve iç harcının bol cevizli olmasıyla maharet ister.",
+                ing: [[2,"su bardağı","İnce köftelik bulgur ve yarım su bardağı irmik"],[2,"su bardağı","Kaynar su"],[1,"adet","Yumurta ve 2 yemek kaşığı un (dış hamura)"],[350,"gram","Dana kıyma (iç harç için)"],[3,"adet","Kuru soğan (ince doğranmış)"],[1,"su bardağı","İri çekilmiş ceviz içi ve yarım demet maydanoz"],[2,"su bardağı","Ayçiçek yağı (kızartmak için)"]],
+                steps: {
+                    prep: ["Kıymayı soğan ve tereyağıyla kavurun; baharatlar, ceviz ve maydanozu ekleyip tamamen soğutun (donması için buzdolabına koyun).", "Islatılmış bulgur ve irmiği yumurta, un ve salçayla sakız gibi yoğurun."],
+                    cook: ["Hamurdan ceviz kadar parçalar alıp işaret parmağınızla incecik oyun, soğuk kıymalı harçtan doldurup uçlarını sivrilterek kapatın.", "Derin kızgın yağda 3-4 dakika altın rengi olana dek kızartın (veya limonlu tuzlu suda haşlayın)."],
+                    serve: ["Limon dilimleri ve acı biber turşusu eşliğinde sıcak servis yapın."]
+                },
+                tips: "Kızartırken köftelerin çatlamaması için iç harcın mutlaka buzdolabında donmuş olması ve yağın köftelerin üzerini tamamen örtmesi gerekir."
+            },
+            {
+                id: "lahmacun", title: "Taş Fırın Usulü Antep Lahmacunu", region: "Güneydoğu Anadolu", city: "Gaziantep / Şanlıurfa", category: "Hamur İşi",
+                prep: "40 dk", cook: "12 dk", diff: "Orta", cal: 390, srv: 6,
+                desc: "Çıtır ince hamur üzerinde zırh kıyması, sarımsak (Antep) veya soğan (Urfa), kapya biber ve maydanozlu nefis harç.",
+                history: "Arapça 'lahm bi acin' (hamurlu et) kelimesinden gelen lahmacun, Gaziantep'te sarımsaklı, Şanlıurfa'da ise soğanlı olarak taş fırınlarda pişirilir.",
+                ing: [[4,"su bardağı","Un"],[1.5,"su bardağı","Ilık su ve 1 çay kaşığı tuz"],[350,"gram","Orta yağlı kuzu-dana kıyma"],[2,"adet","Domates ve 2 adet kapya biber"],[4,"diş","Sarımsak ve yarım demet maydanoz"],[1,"yemek kaşığı","Domates-biber salçası ve 2 yemek kaşığı sıvı yağ"]],
+                steps: {
+                    prep: ["Un, su ve tuzu yoğurup 20 dakika dinlendirin. Sebzeleri çok ince kıyıp kıyma, salça, yağ ve baharatlarla sürülür kıvamda bir harç hazırlayın."],
+                    cook: ["Bezeleri yemek tabağı büyüklüğünde incecik açın, üzerine harcı kenarlara kadar ince yayın.", "250 derece önceden ısıtılmış fırında 7-8 dakika (veya kapaklı tavada kısık ateşte) altı çıtırlaşana dek pişirin."],
+                    serve: ["İçine bol maydanoz, sumaklı soğan ve taze limon sıkıp rulo yaparak sıcak servis edin."]
+                },
+                tips: "Ev fırınında taş fırın çıtırlığı yakalamak için fırın tepsisini önceden fırının içinde iyice ısıtıp lahmacunları sıcak tepsiye yerleştirin."
+            },
+            {
+                id: "yuvalama", title: "Gaziantep Bayram Yuvalaması", region: "Güneydoğu Anadolu", city: "Gaziantep", category: "Çorba",
+                prep: "60 dk", cook: "40 dk", diff: "Ustalık İster", cal: 450, srv: 6,
+                desc: "Pirinç unu ve yağsız kıymadan nohut büyüklüğünde yuvarlanan minik köftelerin, kuzu eti, nohut ve süzme yoğurtla piştiği bayram yemeği.",
+                history: "Gaziantep'te Ramazan Bayramı sabahının değişmez tören yemeğidir. Aile kadınlarının bir araya gelip minik yuvalamaları avuç içinde yuvarlaması bayram geleneğidir.",
+                ing: [[1.5,"su bardağı","Pirinç unu (veya kırık pirinç)"],[200,"gram","Yağsız dana kıyma (yuvalama hamuruna)"],[300,"gram","Kuşbaşı kuzu eti ve 1 su bardağı haşlanmış nohut"],[2,"su bardağı","Süzme yoğurt ve 1 adet yumurta"],[5,"su bardağı","Sıcak et suyu"],[2,"yemek kaşığı","Tereyağı ve 1 yemek kaşığı kuru nane"]],
+                steps: {
+                    prep: ["Pirinç unu, yağsız kıyma ve tuzu azar azar suyla yoğurun; nohut tanesi büyüklüğünde minik köfteler yuvarlayıp buharda 10 dakika pişirin."],
+                    cook: ["Haşlanmış kuzu etleri ve nohutları sıcak et suyunda kaynatın, yuvalama köftelerini ekleyip 10 dakika pişirin.", "Süzme yoğurt ve yumurtayı çırpıp yemek suyuyla ılıtarak tencereye bağlayın."],
+                    serve: ["Üzerine tereyağında kızdırılmış bol kuru nane gezdirerek sıcak servis yapın."]
+                },
+                tips: "Yuvalama köftelerini suya atmadan önce süzgeç üzerinde buharda 10 dakika haşlamak suda dağılmalarını tamamen önler."
+            },
+            {
+                id: "patlican-kebabi", title: "Fırında Patlıcan Kebabı", region: "Güneydoğu Anadolu", city: "Gaziantep / Şanlıurfa", category: "Ana Yemek",
+                prep: "25 dk", cook: "40 dk", diff: "Kolay", cal: 540, srv: 4,
+                desc: "İri dilimlenmiş kemer patlıcanların arasına dizilen yağlı kuzu köftelerin domates ve biberle fırınlandığı Güneydoğu klasiği.",
+                history: "Birecik patlıcanı ve yağlı kuzu kıymasının yalnızca tuz ve karabiberle buluştuğu bu kebap, patlıcanın et yağını emmesiyle benzersiz bir lezzet sunar.",
+                ing: [[4,"adet","Kalın kemer patlıcan (3 cm halkalar halinde doğranmış)"],[500,"gram","Yağlı kuzu kıyma"],[1.5,"çay kaşığı","Tuz ve 1 çay kaşığı karabiber"],[3,"adet","Domates ve 4 adet yeşil sivri biber"],[4,"adet","Lavaş ekmeği (servis için)"]],
+                steps: {
+                    prep: ["Kuzu kıymayı yalnızca tuz ve karabiberle 5 dakika yoğurun. Patlıcanları alacalı soyup 3 cm kalınlığında halkalar kesin."],
+                    cook: ["Yuvarlak fırın tepsisine bir dilim patlıcan bir parça köfte şeklinde sıkıca dizin; ortaya domates ve biberleri yerleştirin.", "200 derece fırında patlıcanlar yumuşayıp köfteler kızarana dek 35-40 dakika pişirin."],
+                    serve: ["Fırından çıkan kebabı sıcak lavaş arasına çekerek köz biber ve ayranla servis edin."]
+                },
+                tips: "Patlıcan kebabının kıymasına soğan veya ekmek içi konmaz; etin yağlı olması patlıcanların kurumasını önler."
+            },
+            {
+                id: "mumbar-dolmasi", title: "Baharatlı Mumbar Dolması", region: "Güneydoğu Anadolu", city: "Mardin / Adana", category: "Ana Yemek",
+                prep: "50 dk", cook: "55 dk", diff: "Ustalık İster", cal: 610, srv: 4,
+                desc: "İyice temizlenmiş kuzu bağırsağının içine doldurulan kıymalı, pirinçli ve bol baharatlı harcın ağır ateşte piştiği geleneksel lezzet.",
+                history: "Güneydoğu ve Çukurova mutfağının en köklü sakatat yemeği olan mumbar, temizlik aşamasındaki özen ve iç harcındaki yenibahar-kimyon-isot dengesiyle ustalık ister.",
+                ing: [[500,"gram","Temizlenmiş kuzu mumbarı"],[1.5,"su bardağı","Pirinç"],[200,"gram","Kıyma ve 50 gram ince doğranmış kuyruk yağı"],[2,"adet","Kuru soğan (ince doğranmış) ve 3 diş sarımsak"],[1.5,"yemek kaşığı","Biber-domates salçası"],[1,"tatlı kaşığı","Kimyon, pul biber, karabiber, kuru nane"]],
+                steps: {
+                    prep: ["Mumbarları limonlu ve tuzlu suda iyice ovalayıp ters yüz ederek temizleyin. Pirinç, kıyma, kuyruk yağı, soğan, salça ve baharatlarla iç harcı karıştırın."],
+                    cook: ["Mumbarların uç kısmından harcı iterek gevşek şekilde doldurun (pirincin şişme payını bırakın).", "Tencereye alıp üzerini geçecek sıcak su ve tuzla 50 dakika pişirin; isteğe göre servis öncesi tavada tereyağında hafif kızartın."],
+                    serve: ["Dilimleyip üzerine pul biber ve kimyon serperek sıcak servis yapın."]
+                },
+                tips: "Mumbarları çok sıkı doldurmamak pişerken pirinçlerin şişip bağırsağı patlatmasını önler."
+            },
+            {
+                id: "sillik-tatlisi", title: "Şanlıurfa Şıllık Tatlısı", region: "Güneydoğu Anadolu", city: "Şanlıurfa", category: "Tatlı",
+                prep: "30 dk", cook: "20 dk", diff: "Kolay", cal: 420, srv: 6,
+                desc: "İncecik pişirilen krep yufkalarının arasına bol ceviz konulup rulo yapıldığı, üzerine tereyağlı şerbet dökülen Urfa tatlısı.",
+                history: "Şanlıurfa'nın en sevilen yöresel tatlısı olan şıllık tatlısı, adını Kürtçe 'şileki' (ıslak) kelimesinden alır ve tereyağlı sıcak şerbetiyle yumuşacık bir dokuya sahiptir.",
+                ing: [[2,"su bardağı","Süt ve 1 su bardağı su"],[2,"su bardağı","Un ve 2 adet yumurta"],[1.5,"su bardağı","İri çekilmiş ceviz içi"],[2,"su bardağı","Toz şeker ve 2 su bardağı su (şerbet)"],[2,"yemek kaşığı","Tereyağı (şerbetin içine)"]],
+                steps: {
+                    prep: ["Süt, su, yumurta ve unu pürüzsüz çırpıp akıcı bir krep hamuru hazırlayın. Şeker ve suyu 10 dakika kaynatıp içine tereyağını ekleyin."],
+                    cook: ["Hafif yağlanmış tavada incecik krepler pişirin. Kreplerin içine ceviz serpip rulo yapın ve tepsiye dizin."],
+                    serve: ["Dilimlediğiniz ruloların üzerine ılık tereyağlı şerbeti gezdirin, Antep fıstığı serperek sıcak servis edin."]
+                },
+                tips: "Şerbetin içine eklenen tereyağı, krep katmanlarının birbirine yapışmasını önler ve tatlıya eşsiz bir parlaklık verir."
+            }
+        ];
+
+        // Ham veriyi tam nesne yapısına dönüştür
+        const recipes = rawRecipes.map(r => ({
+            id: r.id,
+            title: r.title,
+            region: r.region,
+            city: r.city,
+            category: r.category,
+            prepTime: r.prep,
+            cookTime: r.cook,
+            cookMinutes: parseInt(r.cook) || 30,
+            difficulty: r.diff,
+            calories: r.cal,
+            defaultServings: r.srv,
+            shortDesc: r.desc,
+            history: r.history,
+            ingredients: r.ing.map(item => ({ amount: item[0], unit: item[1], name: item[2] })),
+            steps: r.steps,
+            tips: r.tips
+        }));
+
+        // --- 4. UYGULAMA DURUMU (STATE) ---
+        const appState = {
+            region: "Tümü",
+            category: "Tümü",
+            difficulty: "Tümü",
+            search: "",
+            viewMode: "all", // 'all' | 'favorites' | 'recent'
+            favorites: JSON.parse(localStorage.getItem("ala_favorites_v2") || "[]"),
+            recent: JSON.parse(localStorage.getItem("ala_recent_v2") || "[]"),
+            activeRecipeId: null,
+            servings: 4,
+            timerSeconds: 1800,
+            timerRunning: false,
+            timerInterval: null
+        };
+
+        const categoriesList = ["Tümü", "Ana Yemek", "Çorba", "Hamur İşi", "Zeytinyağlı/Meze", "Tatlı"];
+        const difficultiesList = ["Tümü", "Kolay", "Orta", "Ustalık İster"];
+
+        // --- 5. BAŞLATMA ---
+        document.addEventListener("DOMContentLoaded", () => {
+            renderRegionSelector();
+            renderRegionBanner();
+            renderCategoryFilters();
+            renderDifficultyFilters();
+            updateHeaderBadges();
+            renderRecipesGrid();
+            lucide.createIcons();
+
+            const searchInput = document.getElementById("search-input");
+            const clearBtn = document.getElementById("clear-search-btn");
+
+            searchInput.addEventListener("input", (e) => {
+                appState.search = e.target.value.trim().toLowerCase();
+                clearBtn.classList.toggle("hidden", appState.search.length === 0);
+                renderRecipesGrid();
+            });
+
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "Escape" && !document.getElementById("recipe-modal").classList.contains("hidden")) {
+                    closeRecipeModal();
+                }
+            });
+        });
+
+        // --- 6. BÖLGE SEÇİCİ VE KÜLTÜREL BANNER ---
+        function renderRegionSelector() {
+            const container = document.getElementById("region-selector");
+            const regionKeys = Object.keys(regionsMeta);
+
+            container.innerHTML = regionKeys.map(key => {
+                const meta = regionsMeta[key];
+                const count = key === "Tümü" ? recipes.length : recipes.filter(r => r.region === key).length;
+                const isSelected = appState.region === key && appState.viewMode === "all";
+
+                const cardStyle = isSelected
+                    ? `bg-gradient-to-br ${meta.gradient} text-white shadow-md scale-[1.02] border-transparent`
+                    : "bg-white hover:bg-stonewarm-50 text-stonewarm-800 border-stonewarm-300/80 hover:border-terracotta-400";
+
+                const badgeStyle = isSelected
+                    ? "bg-white/25 text-white"
+                    : "bg-stonewarm-100 text-stone-600";
+
+                return `
+                    <button onclick="selectRegion('${key}')" class="p-3 rounded-2xl border text-left transition-all flex flex-col justify-between gap-2 ${cardStyle}">
+                        <div class="flex items-center justify-between w-full">
+                            <i data-lucide="${meta.icon}" class="w-4 h-4 ${isSelected ? 'text-white' : 'text-terracotta-600'}"></i>
+                            <span class="text-[11px] font-bold px-2 py-0.5 rounded-full ${badgeStyle}">${count}</span>
+                        </div>
+                        <span class="font-bold text-xs sm:text-sm leading-tight block">${meta.shortName}</span>
+                    </button>
+                `;
+            }).join("");
+        }
+
+        function renderRegionBanner() {
+            const banner = document.getElementById("region-banner");
+            if (appState.viewMode === "favorites") {
+                banner.innerHTML = `
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-wider text-terracotta-600">Kişisel Koleksiyon</span>
+                            <h2 class="font-serif text-xl sm:text-2xl font-bold text-stonewarm-900">Favori Tariflerim (${appState.favorites.length})</h2>
+                            <p class="text-sm text-stone-600 mt-1">Beğenip kaydettiğiniz geleneksel Türk yemekleri tek ekranda.</p>
+                        </div>
+                        <button onclick="resetAllFilters()" class="self-start sm:self-center px-4 py-2 rounded-xl bg-stonewarm-100 hover:bg-stonewarm-200 text-xs font-bold text-stonewarm-800">Tüm Bölgelere Dön</button>
+                    </div>
+                `;
+                return;
+            }
+            if (appState.viewMode === "recent") {
+                banner.innerHTML = `
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-wider text-saffron-600">Göz Atma Geçmişi</span>
+                            <h2 class="font-serif text-xl sm:text-2xl font-bold text-stonewarm-900">Son İncelediğiniz Tarifler</h2>
+                            <p class="text-sm text-stone-600 mt-1">En son detaylarına baktığınız yemek reçeteleri.</p>
+                        </div>
+                        <button onclick="resetAllFilters()" class="self-start sm:self-center px-4 py-2 rounded-xl bg-stonewarm-100 hover:bg-stonewarm-200 text-xs font-bold text-stonewarm-800">Tüm Bölgelere Dön</button>
+                    </div>
+                `;
+                return;
+            }
+
+            const meta = regionsMeta[appState.region];
+            const count = appState.region === "Tümü" ? recipes.length : recipes.filter(r => r.region === appState.region).length;
+
+            banner.innerHTML = `
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                    <div class="space-y-1.5">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <h2 class="font-serif text-xl sm:text-2xl font-extrabold text-stonewarm-900">${meta.name}</h2>
+                            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-terracotta-100 text-terracotta-800">${count} Geleneksel Tarif</span>
+                        </div>
+                        <p class="text-stone-600 text-sm leading-relaxed max-w-4xl">${meta.description}</p>
+                    </div>
+                    <div class="shrink-0 bg-stonewarm-100 px-4 py-3 rounded-xl border border-stonewarm-200">
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-olive-700 block mb-0.5">Öne Çıkan Gastronomi Şehirleri</span>
+                        <span class="text-xs sm:text-sm font-semibold text-stonewarm-900">${meta.cities}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function selectRegion(regionKey) {
+            appState.region = regionKey;
+            appState.viewMode = "all";
+            renderRegionSelector();
+            renderRegionBanner();
+            renderRecipesGrid();
+            lucide.createIcons();
+        }
+
+        // --- 7. KATEGORİ & ZORLUK FİLTRELERİ ---
+        function renderCategoryFilters() {
+            const container = document.getElementById("category-filters");
+            container.innerHTML = categoriesList.map(cat => {
+                const active = appState.category === cat;
+                const cls = active
+                    ? "bg-stonewarm-900 text-white border-stonewarm-900 shadow-2xs"
+                    : "bg-white hover:bg-stonewarm-100 text-stonewarm-800 border-stonewarm-300";
+                return `<button onclick="selectCategory('${cat}')" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold border transition-all whitespace-nowrap ${cls}">${cat}</button>`;
+            }).join("");
+        }
+
+        function selectCategory(cat) {
+            appState.category = cat;
+            renderCategoryFilters();
+            renderRecipesGrid();
+        }
+
+        function renderDifficultyFilters() {
+            const container = document.getElementById("difficulty-filters");
+            container.innerHTML = difficultiesList.map(diff => {
+                const active = appState.difficulty === diff;
+                const cls = active
+                    ? "bg-terracotta-600 text-white"
+                    : "text-stone-600 hover:bg-stonewarm-100";
+                return `<button onclick="selectDifficulty('${diff}')" class="px-2.5 py-1.5 rounded-lg text-xs font-bold transition-colors whitespace-nowrap ${cls}">${diff}</button>`;
+            }).join("");
+        }
+
+        function selectDifficulty(diff) {
+            appState.difficulty = diff;
+            renderDifficultyFilters();
+            renderRecipesGrid();
+        }
+
+        function clearSearch() {
+            const inp = document.getElementById("search-input");
+            inp.value = "";
+            appState.search = "";
+            document.getElementById("clear-search-btn").classList.add("hidden");
+            renderRecipesGrid();
+        }
+
+        function resetAllFilters() {
+            appState.region = "Tümü";
+            appState.category = "Tümü";
+            appState.difficulty = "Tümü";
+            appState.viewMode = "all";
+            clearSearch();
+            renderRegionSelector();
+            renderRegionBanner();
+            renderCategoryFilters();
+            renderDifficultyFilters();
+            renderRecipesGrid();
+            lucide.createIcons();
+        }
+
+        function toggleFavoritesView() {
+            appState.viewMode = appState.viewMode === "favorites" ? "all" : "favorites";
+            renderRegionSelector();
+            renderRegionBanner();
+            renderRecipesGrid();
+            lucide.createIcons();
+        }
+
+        function toggleRecentView() {
+            appState.viewMode = appState.viewMode === "recent" ? "all" : "recent";
+            renderRegionSelector();
+            renderRegionBanner();
+            renderRecipesGrid();
+            lucide.createIcons();
+        }
+
+        // --- 8. TARİF KARTLARINI LİSTELEME ---
+        function getDifficultyBadgeClass(diff) {
+            if (diff === "Kolay") return "bg-emerald-100 text-emerald-800 border-emerald-200";
+            if (diff === "Orta") return "bg-amber-100 text-amber-800 border-amber-200";
+            return "bg-rose-100 text-rose-800 border-rose-200";
+        }
+
+        function renderRecipesGrid() {
+            const grid = document.getElementById("recipes-grid");
+            const empty = document.getElementById("empty-state");
+            const counter = document.getElementById("results-counter");
+
+            let list = recipes;
+
+            if (appState.viewMode === "favorites") {
+                list = recipes.filter(r => appState.favorites.includes(r.id));
+            } else if (appState.viewMode === "recent") {
+                list = appState.recent.map(id => recipes.find(r => r.id === id)).filter(Boolean);
+            } else if (appState.region !== "Tümü") {
+                list = list.filter(r => r.region === appState.region);
+            }
+
+            if (appState.category !== "Tümü") {
+                list = list.filter(r => r.category === appState.category);
+            }
+
+            if (appState.difficulty !== "Tümü") {
+                list = list.filter(r => r.difficulty === appState.difficulty);
+            }
+
+            if (appState.search) {
+                const q = appState.search;
+                list = list.filter(r =>
+                    r.title.toLowerCase().includes(q) ||
+                    r.city.toLowerCase().includes(q) ||
+                    r.region.toLowerCase().includes(q) ||
+                    r.shortDesc.toLowerCase().includes(q) ||
+                    r.ingredients.some(i => i.name.toLowerCase().includes(q))
+                );
+            }
+
+            counter.textContent = `${list.length} tarif listeleniyor`;
+
+            if (list.length === 0) {
+                grid.innerHTML = "";
+                empty.classList.remove("hidden");
+                lucide.createIcons();
+                return;
+            }
+
+            empty.classList.add("hidden");
+
+            grid.innerHTML = list.map(r => {
+                const isFav = appState.favorites.includes(r.id);
+                const rMeta = regionsMeta[r.region];
+                const diffCls = getDifficultyBadgeClass(r.difficulty);
+                const svgArt = categoryIllustrations[r.category] || categoryIllustrations["Ana Yemek"];
+
+                return `
+                    <article onclick="openRecipeModal('${r.id}')" class="recipe-card group bg-white rounded-3xl border border-stonewarm-200 overflow-hidden shadow-2xs hover:shadow-xl cursor-pointer flex flex-col justify-between">
+                        <div>
+                            <!-- Estetik SVG & Gradyan Kart Kapağı -->
+                            <div class="relative h-44 bg-gradient-to-br ${rMeta.gradient} p-3 flex items-center justify-center overflow-hidden">
+                                <div class="absolute inset-0 bg-white/80 backdrop-blur-[1px]"></div>
+                                <div class="relative z-10 w-40 h-32 transform group-hover:scale-105 transition-transform duration-300">
+                                    ${svgArt}
+                                </div>
+
+                                <!-- Üst Sol: Bölge & Şehir Rozeti -->
+                                <div class="absolute top-3 left-3 z-20 flex flex-col gap-1">
+                                    <span class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-stonewarm-900/85 text-white backdrop-blur-xs">
+                                        ${r.region}
+                                    </span>
+                                </div>
+
+                                <!-- Üst Sağ: Favori Butonu -->
+                                <button onclick="event.stopPropagation(); toggleFavorite('${r.id}')" class="absolute top-3 right-3 z-20 w-9 h-9 rounded-full bg-white/95 hover:bg-white shadow-xs flex items-center justify-center transition-transform active:scale-90" aria-label="Favorile">
+                                    <i data-lucide="heart" class="w-4 h-4 ${isFav ? 'fill-terracotta-600 text-terracotta-600' : 'text-stone-500'}"></i>
+                                </button>
+
+                                <!-- Alt Sol: Kategori Etiketi -->
+                                <span class="absolute bottom-2.5 left-3 z-20 px-2.5 py-0.5 rounded-lg text-[11px] font-bold bg-white/90 text-stonewarm-800 border border-stonewarm-200">
+                                    ${r.category}
+                                </span>
+
+                                <!-- Alt Sağ: Kalori -->
+                                <span class="absolute bottom-2.5 right-3 z-20 px-2 py-0.5 rounded-lg text-[11px] font-bold bg-olive-800/90 text-white">
+                                    ${r.calories} kcal
+                                </span>
+                            </div>
+
+                            <!-- Kart Bilgileri -->
+                            <div class="p-5">
+                                <div class="flex items-center gap-1 text-xs font-bold text-terracotta-600 mb-1">
+                                    <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+                                    <span>${r.city}</span>
+                                </div>
+                                <h3 class="font-serif text-lg sm:text-xl font-bold text-stonewarm-900 group-hover:text-terracotta-600 transition-colors mb-2 leading-snug">
+                                    ${r.title}
+                                </h3>
+                                <p class="text-stone-600 text-xs sm:text-sm line-clamp-2 leading-relaxed">
+                                    ${r.shortDesc}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Kart Alt Bar -->
+                        <div class="px-5 py-3 bg-stonewarm-50 border-t border-stonewarm-200 flex items-center justify-between text-xs">
+                            <div class="flex items-center gap-2.5 text-stone-600 font-medium">
+                                <span class="flex items-center gap-1" title="Hazırlık + Pişirme">
+                                    <i data-lucide="clock" class="w-3.5 h-3.5 text-stone-400"></i>
+                                    ${r.prepTime} + ${r.cookTime}
+                                </span>
+                                <span class="flex items-center gap-1" title="Varsayılan Porsiyon">
+                                    <i data-lucide="users" class="w-3.5 h-3.5 text-stone-400"></i>
+                                    ${r.defaultServings}K
+                                </span>
+                            </div>
+                            <span class="px-2.5 py-0.5 rounded-full font-bold border ${diffCls}">
+                                ${r.difficulty}
+                            </span>
+                        </div>
+                    </article>
+                `;
+            }).join("");
+
+            lucide.createIcons();
+        }
+
+        // --- 9. FAVORİLER & SON BAKILANLAR (LOCALSTORAGE) ---
+        function toggleFavorite(id) {
+            const idx = appState.favorites.indexOf(id);
+            if (idx === -1) {
+                appState.favorites.push(id);
+                showToast("Tarif favorilerinize eklendi.");
+            } else {
+                appState.favorites.splice(idx, 1);
+                showToast("Tarif favorilerden çıkarıldı.");
+            }
+            localStorage.setItem("ala_favorites_v2", JSON.stringify(appState.favorites));
+            updateHeaderBadges();
+            renderRecipesGrid();
+            if (appState.viewMode === "favorites") renderRegionBanner();
+            if (appState.activeRecipeId === id) updateModalFavState(id);
+        }
+
+        function addToRecent(id) {
+            appState.recent = [id, ...appState.recent.filter(item => item !== id)].slice(0, 12);
+            localStorage.setItem("ala_recent_v2", JSON.stringify(appState.recent));
+            updateHeaderBadges();
+        }
+
+        function updateHeaderBadges() {
+            document.getElementById("fav-count").textContent = appState.favorites.length;
+            document.getElementById("recent-count").textContent = appState.recent.length;
+        }
+
+        // --- 10. TARİF DETAY MODALI & PORSİYON HESAPLAYICI ---
+        function openRecipeModal(id) {
+            const r = recipes.find(item => item.id === id);
+            if (!r) return;
+
+            appState.activeRecipeId = id;
+            appState.servings = r.defaultServings;
+            addToRecent(id);
+
+            const rMeta = regionsMeta[r.region];
+            const svgArt = categoryIllustrations[r.category] || categoryIllustrations["Ana Yemek"];
+
+            document.getElementById("m-region-badge").textContent = r.region;
+            document.getElementById("m-city-badge").innerHTML = `<i data-lucide="map-pin" class="w-3 h-3 text-terracotta-600"></i> ${r.city}`;
+            document.getElementById("m-cat-badge").textContent = r.category;
+
+            const cover = document.getElementById("m-cover-art");
+            cover.className = `lg:col-span-5 h-52 sm:h-64 rounded-2xl flex items-center justify-center p-4 relative overflow-hidden bg-gradient-to-br ${rMeta.gradient}`;
+            cover.innerHTML = `<div class="absolute inset-0 bg-white/80"></div><div class="relative z-10 w-52 h-40">${svgArt}</div>`;
+
+            document.getElementById("m-title").textContent = r.title;
+            document.getElementById("m-short-desc").textContent = r.shortDesc;
+            document.getElementById("m-prep").textContent = r.prepTime;
+            document.getElementById("m-cook").textContent = r.cookTime;
+
+            const diffEl = document.getElementById("m-diff");
+            diffEl.textContent = r.difficulty;
+            diffEl.className = `font-bold text-sm sm:text-base ${r.difficulty === 'Kolay' ? 'text-emerald-700' : r.difficulty === 'Orta' ? 'text-amber-700' : 'text-rose-700'}`;
+
+            document.getElementById("m-calories").textContent = `${r.calories} kcal`;
+            document.getElementById("m-history").textContent = r.history;
+            document.getElementById("m-tips").textContent = r.tips;
+
+            // Porsiyon ve Malzemeleri Çiz
+            renderModalIngredients();
+
+            // Bölümlendirilmiş Hazırlanış Aşamalarını Çiz
+            renderModalSteps(r.steps);
+
+            // Zamanlayıcıyı pişirme süresine ayarla
+            resetTimerToCookTime(r.cookMinutes);
+
+            // Benzer Bölge Yemekleri
+            renderRelatedRecipes(r);
+
+            // Favori butonu durumu
+            updateModalFavState(id);
+
+            document.getElementById("recipe-modal").classList.remove("hidden");
+            document.body.style.overflow = "hidden";
+            lucide.createIcons();
+        }
+
+        function closeRecipeModal() {
+            stopTimer();
+            document.getElementById("recipe-modal").classList.add("hidden");
+            document.body.style.overflow = "";
+            appState.activeRecipeId = null;
+        }
+
+        function toggleModalFavorite() {
+            if (appState.activeRecipeId) {
+                toggleFavorite(appState.activeRecipeId);
+            }
+        }
+
+        function updateModalFavState(id) {
+            const isFav = appState.favorites.includes(id);
+            const icon = document.getElementById("m-fav-icon");
+            const txt = document.getElementById("m-fav-text");
+            if (isFav) {
+                icon.classList.add("fill-terracotta-600", "text-terracotta-600");
+                txt.textContent = "Favorilerde";
+            } else {
+                icon.classList.remove("fill-terracotta-600", "text-terracotta-600");
+                txt.textContent = "Favorile";
+            }
+        }
+
+        // Akıllı Porsiyon Hesaplama & Kesir Formatlama
+        function adjustServings(delta) {
+            const next = appState.servings + delta;
+            if (next >= 1 && next <= 20) {
+                appState.servings = next;
+                renderModalIngredients();
+            }
+        }
+
+        function setServings(num) {
+            appState.servings = num;
+            renderModalIngredients();
+        }
+
+        function formatSmartQuantity(val) {
+            const rounded = Math.round(val * 100) / 100;
+            const whole = Math.floor(rounded);
+            const frac = Math.round((rounded - whole) * 100) / 100;
+
+            let fracStr = "";
+            if (Math.abs(frac - 0.25) < 0.04) fracStr = "¼";
+            else if (Math.abs(frac - 0.33) < 0.05) fracStr = "⅓";
+            else if (Math.abs(frac - 0.5) < 0.04) fracStr = "½";
+            else if (Math.abs(frac - 0.66) < 0.05) fracStr = "⅔";
+            else if (Math.abs(frac - 0.75) < 0.04) fracStr = "¾";
+
+            if (fracStr) {
+                return whole > 0 ? `${whole} ${fracStr}` : fracStr;
+            }
+            return Number.isInteger(rounded) ? rounded.toString() : rounded.toFixed(1).replace(".0", "");
+        }
+
+        function renderModalIngredients() {
+            const r = recipes.find(item => item.id === appState.activeRecipeId);
+            if (!r) return;
+
+            document.getElementById("m-servings-label").textContent = `${appState.servings} Kişilik`;
+
+            // Hızlı seçim butonlarını vurgula
+            document.querySelectorAll(".quick-srv-btn").forEach(btn => {
+                const srv = parseInt(btn.dataset.srv);
+                if (srv === appState.servings) {
+                    btn.classList.add("bg-terracotta-600", "text-white");
+                    btn.classList.remove("bg-stonewarm-100", "text-stonewarm-800");
+                } else {
+                    btn.classList.remove("bg-terracotta-600", "text-white");
+                    btn.classList.add("bg-stonewarm-100", "text-stonewarm-800");
+                }
+            });
+
+            const ratio = appState.servings / r.defaultServings;
+            const list = document.getElementById("m-ingredients-list");
+
+            list.innerHTML = r.ingredients.map(ing => {
+                const qty = formatSmartQuantity(ing.amount * ratio);
+                return `
+                    <li onclick="toggleCheckItem(this)" class="flex items-start gap-3 p-2 rounded-xl hover:bg-stonewarm-100 cursor-pointer transition-colors select-none">
+                        <div class="w-5 h-5 rounded-md border-2 border-terracotta-400 flex items-center justify-center shrink-0 mt-0.5 chk-box transition-colors">
+                            <i data-lucide="check" class="w-3.5 h-3.5 text-white hidden chk-icon"></i>
+                        </div>
+                        <span class="text-stone-700 leading-snug chk-text">
+                            <strong class="text-stonewarm-900 font-bold">${qty} ${ing.unit}</strong> ${ing.name}
+                        </span>
+                    </li>
+                `;
+            }).join("");
+            lucide.createIcons();
+        }
+
+        function toggleCheckItem(el) {
+            el.querySelector(".chk-text").classList.toggle("line-through-item");
+            const box = el.querySelector(".chk-box");
+            box.classList.toggle("bg-olive-600");
+            box.classList.toggle("border-olive-600");
+            box.classList.toggle("border-terracotta-400");
+            el.querySelector(".chk-icon").classList.toggle("hidden");
+        }
+
+        function renderModalSteps(stepsObj) {
+            const sections = [
+                { title: "1. Hazırlık Aşaması", icon: "knife", color: "bg-olive-100 text-olive-800", items: stepsObj.prep },
+                { title: "2. Pişirme Aşaması", icon: "flame", color: "bg-terracotta-100 text-terracotta-800", items: stepsObj.cook },
+                { title: "3. Servis Önerisi", icon: "utensils", color: "bg-saffron-100 text-saffron-800", items: stepsObj.serve }
+            ];
+
+            let stepCounter = 1;
+            const container = document.getElementById("m-steps-container");
+
+            container.innerHTML = sections.map(sec => `
+                <div class="bg-white p-4 sm:p-5 rounded-2xl border border-stonewarm-200 shadow-2xs">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-extrabold mb-3 ${sec.color}">
+                        <i data-lucide="${sec.icon}" class="w-3.5 h-3.5"></i> ${sec.title}
+                    </span>
+                    <ol class="space-y-3">
+                        ${sec.items.map(text => {
+                            const num = stepCounter++;
+                            return `
+                                <li onclick="toggleStepDone(this)" class="flex gap-3.5 p-2 rounded-xl hover:bg-stonewarm-50 cursor-pointer transition-all select-none">
+                                    <span class="w-7 h-7 rounded-full bg-stonewarm-900 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 step-num transition-colors">
+                                        ${num}
+                                    </span>
+                                    <p class="text-stone-700 text-sm sm:text-base leading-relaxed step-txt">${text}</p>
+                                </li>
+                            `;
+                        }).join("")}
+                    </ol>
+                </div>
+            `).join("");
+        }
+
+        function toggleStepDone(el) {
+            el.querySelector(".step-txt").classList.toggle("line-through-item");
+            const num = el.querySelector(".step-num");
+            num.classList.toggle("bg-olive-600");
+            num.classList.toggle("bg-stonewarm-900");
+        }
+
+        function renderRelatedRecipes(currentRecipe) {
+            document.getElementById("m-related-title").textContent = `${currentRecipe.region} Bölgesinden Diğer Lezzetler`;
+            const others = recipes.filter(r => r.region === currentRecipe.region && r.id !== currentRecipe.id).slice(0, 3);
+
+            document.getElementById("m-related-grid").innerHTML = others.map(r => `
+                <div onclick="openRecipeModal('${r.id}')" class="p-3.5 rounded-2xl bg-white border border-stonewarm-200 hover:border-terracotta-400 cursor-pointer transition-all flex items-center justify-between gap-3">
+                    <div>
+                        <span class="text-[11px] font-bold text-terracotta-600 block">${r.city}</span>
+                        <h5 class="font-serif font-bold text-stonewarm-900 text-sm">${r.title}</h5>
+                        <span class="text-xs text-stone-500">${r.prepTime} + ${r.cookTime} • ${r.difficulty}</span>
+                    </div>
+                    <i data-lucide="arrow-right" class="w-4 h-4 text-stone-400 shrink-0"></i>
+                </div>
+            `).join("");
+        }
+
+        // --- 11. DAHİLİ MUTFAK ZAMANLAYICISI (TIMER) ---
+        function resetTimerToCookTime(minutes) {
+            stopTimer();
+            appState.timerSeconds = minutes * 60;
+            document.getElementById("timer-preset-btn").textContent = `Pişirme Süresini Kur (${minutes} dk)`;
+            updateTimerDisplay();
+        }
+
+        function setTimerFromCookTime() {
+            const r = recipes.find(item => item.id === appState.activeRecipeId);
+            if (r) resetTimerToCookTime(r.cookMinutes);
+        }
+
+        function adjustTimerMinutes(deltaMin) {
+            appState.timerSeconds = Math.max(60, appState.timerSeconds + deltaMin * 60);
+            updateTimerDisplay();
+        }
+
+        function toggleTimer() {
+            if (appState.timerRunning) {
+                stopTimer();
+            } else {
+                appState.timerRunning = true;
+                document.getElementById("timer-start-btn").textContent = "Duraklat";
+                document.getElementById("timer-start-btn").classList.replace("bg-terracotta-600", "bg-saffron-600");
+
+                appState.timerInterval = setInterval(() => {
+                    if (appState.timerSeconds > 0) {
+                        appState.timerSeconds--;
+                        updateTimerDisplay();
+                    } else {
+                        stopTimer();
+                        showToast("Mutfak zamanlayıcısı doldu! Yemeğinizi kontrol edin.");
+                    }
+                }, 1000);
+            }
+        }
+
+        function stopTimer() {
+            appState.timerRunning = false;
+            clearInterval(appState.timerInterval);
+            const btn = document.getElementById("timer-start-btn");
+            if (btn) {
+                btn.textContent = "Başlat";
+                btn.classList.replace("bg-saffron-600", "bg-terracotta-600");
+            }
+        }
+
+        function resetTimer() {
+            setTimerFromCookTime();
+        }
+
+        function updateTimerDisplay() {
+            const m = Math.floor(appState.timerSeconds / 60).toString().padStart(2, "0");
+            const s = (appState.timerSeconds % 60).toString().padStart(2, "0");
+            document.getElementById("timer-display").textContent = `${m}:${s}`;
+        }
+
+        // --- 12. PANOYA KOPYALAMA YARDIMCILARI ---
+        function copyToClipboardFallback(text, successMessage) {
+            const textarea = document.createElement("textarea");
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand("copy");
+                showToast(successMessage);
+            } catch (err) {
+                showToast("Kopyalama başarısız oldu.");
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function copyShoppingList() {
+            const r = recipes.find(item => item.id === appState.activeRecipeId);
+            if (!r) return;
+
+            const ratio = appState.servings / r.defaultServings;
+            const listItems = document.querySelectorAll("#m-ingredients-list li");
+            const unchecked = [];
+
+            r.ingredients.forEach((ing, idx) => {
+                const isChecked = listItems[idx]?.querySelector(".chk-text")?.classList.contains("line-through-item");
+                if (!isChecked) {
+                    unchecked.push(`- ${formatSmartQuantity(ing.amount * ratio)} ${ing.unit} ${ing.name}`);
+                }
+            });
+
+            if (unchecked.length === 0) {
+                showToast("Tüm malzemeler işaretlenmiş, eksik yok!");
+                return;
+            }
+
+            const text = `${r.title} (${appState.servings} Kişilik) Eksik Malzemeler:\n` + unchecked.join("\n");
+            copyToClipboardFallback(text, "Eksik malzemeler panoya kopyalandı!");
+        }
+
+        function copyFullRecipe() {
+            const r = recipes.find(item => item.id === appState.activeRecipeId);
+            if (!r) return;
+
+            const ratio = appState.servings / r.defaultServings;
+            const ingText = r.ingredients.map(i => `• ${formatSmartQuantity(i.amount * ratio)} ${i.unit} ${i.name}`).join("\n");
+            const allSteps = [...r.steps.prep, ...r.steps.cook, ...r.steps.serve].map((s, idx) => `${idx + 1}. ${s}`).join("\n");
+
+            const fullText = `${r.title.toUpperCase()} (${r.region} - ${r.city})\nPorsiyon: ${appState.servings} Kişilik | Süre: ${r.prepTime} Hazırlık + ${r.cookTime} Pişirme | Zorluk: ${r.difficulty}\n\nMALZEMELER:\n${ingText}\n\nHAZIRLANIŞI:\n${allSteps}\n\nPÜF NOKTASI: ${r.tips}`;
+            copyToClipboardFallback(fullText, "Tarifin tamamı panoya kopyalandı!");
+        }
+
+        // --- 13. TOAST BİLDİRİM ---
+        let toastTimer;
+        function showToast(msg) {
+            const toast = document.getElementById("toast");
+            document.getElementById("toast-msg").textContent = msg;
+            toast.classList.remove("translate-y-24", "opacity-0");
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toast.classList.add("translate-y-24", "opacity-0");
+            }, 2600);
+        }
+    </script>
+</body>
+</html>
